@@ -25,35 +25,77 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        
-        String input = br.readLine();
-        
-        // Hatékony algoritmus
-        int result = solve(input);
-        
-        System.out.println(result);
-    }
-    
-    private static int solve(String s) {
-        // Optimalizált megoldás
-        int[] freq = new int[26]; // kisbetűkhez
-        for (char c : s.toCharArray()) {
-            if (c >= 'a' && c <= 'z') {
-                freq[c - 'a']++;
+        int n = Integer.parseInt(br.readLine().trim());
+        char[][] grid = new char[n][n];
+        for (int i = 0; i < n; i++) {
+            String line = br.readLine();
+            while (line == null || line.length() < n) {
+                // Ha valami miatt sorok törnek (ritka), olvassunk tovább
+                String extra = br.readLine();
+                if (extra == null) break;
+                line = (line == null ? "" : line) + extra;
             }
+            grid[i] = line.trim().toCharArray();
         }
-        
-        // A te logikád itt
-        int count = 0;
-        for (int i = 0; i < 26; i++) {
-            if (freq[i] % 2 == 1) {
-                count++;
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(grid[0][0]);
+
+        // current: lista azon sorindexeknek, amelyek az aktuális diagonálon elérhetők
+        ArrayList<Integer> current = new ArrayList<>();
+        current.add(0); // (0,0) row index 0, mert i+j = 0
+
+        // seen token trükk a duplikátumok elkerülésére (nem törlünk tömböt minden iterációban)
+        int[] seen = new int[n];
+        int seenToken = 1;
+
+        // végső string hossza 2*n - 1; már van 1 karakterünk --> kell még 2*n-2 karakter
+        for (int d = 0; d < 2 * n - 2; d++) {
+            // keresd meg a következő (d+1)-edik diagonálra vezető legkisebb betűt
+            char minChar = Character.MAX_VALUE;
+            for (int idx = 0; idx < current.size(); idx++) {
+                int i = current.get(idx);
+                int j = d - i; // jelenlegi diagonálon j = d - i
+                if (i + 1 < n) {
+                    char c = grid[i + 1][j];
+                    if (c < minChar) minChar = c;
+                }
+                if (j + 1 < n) {
+                    char c = grid[i][j + 1];
+                    if (c < minChar) minChar = c;
+                }
             }
+
+            sb.append(minChar);
+
+            // építsük a következő diagonál current listáját (sorindexek)
+            ArrayList<Integer> next = new ArrayList<>();
+            seenToken++;
+            for (int idx = 0; idx < current.size(); idx++) {
+                int i = current.get(idx);
+                int j = d - i;
+                if (i + 1 < n && grid[i + 1][j] == minChar) {
+                    int row = i + 1;
+                    if (seen[row] != seenToken) {
+                        seen[row] = seenToken;
+                        next.add(row);
+                    }
+                }
+                if (j + 1 < n && grid[i][j + 1] == minChar) {
+                    int row = i; // (i, j+1) sorindexe i
+                    if (seen[row] != seenToken) {
+                        seen[row] = seenToken;
+                        next.add(row);
+                    }
+                }
+            }
+
+            current = next;
         }
-        
-        return Math.max(0, count - 1);
+
+        System.out.println(sb.toString());
     }
 }
           </code>
