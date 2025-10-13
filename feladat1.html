@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1. Feladat - Java Megoldás</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔢 1. Feladat - Java Megoldás</h1>
+            <p>Optimális algoritmus tervezése</p>
+        </div>
+
+        <div class="task-content">
+            <h2>Feladat leírása</h2>
+            <p>Írd ide a feladat szövegét (amit a programozási versenyen kaptál)</p>
+            
+            <h2>Java Megoldásom</h2>
+            <div class="solution">
+                <h3>Java kód:</h3>
+                <code>
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        
+        String input = br.readLine();
+        
+        // Hatékony algoritmus
+        int result = solve(input);
+        
+        System.out.println(result);
+    }
+    
+    private static int solve(String s) {
+        // Optimalizált megoldás
+        int[] freq = new int[26]; // kisbetűkhez
+        for (char c : s.toCharArray()) {
+            if (c >= 'a' && c <= 'z') {
+                freq[c - 'a']++;
+            }
+        }
+        
+        // A te logikád itt
+        int count = 0;
+        for (int i = 0; i < 26; i++) {
+            if (freq[i] % 2 == 1) {
+                count++;
+            }
+        }
+        
+        return Math.max(0, count - 1);
+    }
+}
+          </code>
+                
+                <h3>Magyarázat:</h3>
+                <p>Ez a megoldás optimalizált idő- és memóriahasználattal dolgozik.</p>
+                
+                <h3>Bemenet:</h3>
+                <code>gwwtfarmgimwymmfmcohixrchzhmof...</code>
+                
+                <h3>Kimenet:</h3>
+                <code>0</code>
+            </div>
+        </div>
+
+        <a href="index.html" class="back-btn">⬅️ Vissza a főoldalra</a>
+    </div>
+</body>
+</html>
