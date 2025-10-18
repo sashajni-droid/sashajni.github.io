@@ -110,13 +110,72 @@ public class Main {
           </code>
                 
                 <h3>Magyarázat:</h3>
-                <p>Ez a megoldás optimalizált idő- és memóriahasználattal dolgozik.</p>
+                <p> 1. Beolvassa a táblát
+                        int n = Integer.parseInt(br.readLine().trim());
+                        char[][] grid = new char[n][n];
+                    Ez megmondja, mekkora a tábla (pl. 4×4). A grid tárolja a betűket (mint egy négyzetrács).
+                        grid[0][0] = 'A'
+                        grid[0][1] = 'A'
+                        grid[0][2] = 'C'
+                        grid[0][3] = 'A'
+                        ...
+
+                    2. Az indulás
+                        StringBuilder sb = new StringBuilder();
+                        sb.append(grid[0][0]);
+                    A szó (sb) első betűje a bal felső sarok betűje. Tehát elindulunk az első „A”-val.
+
+                    3. A kezdőpont listája
+                        ArrayList<Integer> current = new ArrayList<>();
+                        current.add(0);
+                    Ez megjegyzi, hogy hol vagyunk most. Most csak egy helyen vagyunk: a bal felső sarokban. A program diagonálisan (átlósan) fog haladni a táblán — mindig a következő "átló" mezőit nézi meg.
+                        
+                    4. Most jön a lépkedés a táblán
+                    Ez a nagy for-ciklus csinálja a lépéseket:
+                        for (int d = 0; d < 2 * n - 2; d++) {
+                    Miért 2*n - 2? Mert ennyi lépést kell tenni, hogy a bal felső saroktól elérjünk a jobb alsó sarokig.
+                        
+                    5. A legkisebb betű keresése
+                        char minChar = Character.MAX_VALUE;
+                    Itt tárolja, mi a legkisebb betű, amit most találunk. Aztán megnézi az összes lehetséges új mezőt, amire léphetünk:
+                        if (i + 1 < n) {
+                            char c = grid[i + 1][j];
+                            if (c < minChar) minChar = c;
+                        }
+                        if (j + 1 < n) {
+                            char c = grid[i][j + 1];
+                            if (c < minChar) minChar = c;
+                        }
+                    Ez azt jelenti: Nézzük meg, ha lelépünk egyet (i+1), milyen betű van ott. Nézzük meg, ha jobbra lépünk egyet (j+1), milyen betű van ott. Ha találunk kisebb betűt (például „A”-t), azt választjuk.
+                                  
+                    6. Hozzáadjuk a legkisebb betűt a szóhoz
+                        sb.append(minChar);
+                    Tehát a következő betű az lesz, amit most kiválasztottunk.
+                                  
+                    7. Következő lépések előkészítése
+                        ArrayList<Integer> next = new ArrayList<>();
+                    Ez tárolja majd, honnan lehet továbbmenni a következő körben. A kód itt ellenőrzi: Melyik mezők vezettek a most kiválasztott legkisebb betűhöz. 
+                    Csak azokat a mezőket tartja meg, amelyek ugyanabba a legkisebb betűbe vezetnek. Így nem kell minden útvonalat végignézni — csak a legígéretesebbeket!
+
+                    8. A „seen” trükk
+                        int[] seen = new int[n];
+                        int seenToken = 1;
+                    Ez csak azért van, hogy ne adjunk hozzá ugyanazt a sort kétszer. Segít, hogy a program gyors legyen.
+                        
+                    9. Végül kiírjuk a kész szót
+                        System.out.println(sb.toString());
+                    Ez az a szó, amit a program lépésről lépésre épített fel — és ez lesz a lexikografikusan legkisebb (tehát ábécében legelső).
+
+                    Összefoglalva:
+                    Képzeld el, hogy van egy betűs labirintusod, minden mező egy betű, te pedig csak jobbra és lefelé mehetsz.
+                    A játék célja, hogy mindig a legkisebb betű felé lépj, amíg a jobb alsó sarokba nem érsz. Közben jegyezd fel a betűket — a végén lesz egy szó. 
+                    A program pontosan ezt csinálja: mindig a legjobb betűt választja, és nem pazarol időt a rossz irányokra. </p>
                 
                 <h3>Bemenet:</h3>
-                <code>gwwtfarmgimwymmfmcohixrchzhmof...</code>
+                <code> Az első sorban egy egész szám: n – a rács mérete. Ezután n sor következik, mindegyik n darab betűt tartalmaz (csupa nagybetűt).</code>
                 
                 <h3>Kimenet:</h3>
-                <code>0</code>
+                <code> Írd ki azt a karakterláncot, ami a lehetséges utak közül lexikografikusan a legkisebb. Feltételek: 1≤n≤3000 </code>
             </div>
         </div>
 
