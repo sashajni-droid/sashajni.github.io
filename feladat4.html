@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fa Bejárások - Tanuljunk Játékosan!</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #e0f7fa 0%, #bbdefb 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            overflow: hidden;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 5px dashed #4fc3f7;
+        }
+        
+        h1 {
+            color: #0288d1;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0 #b3e5fc;
+        }
+        
+        h2 {
+            color: #0277bd;
+            margin: 25px 0 15px;
+            border-left: 5px solid #4fc3f7;
+            padding-left: 15px;
+        }
+        
+        h3 {
+            color: #01579b;
+            margin: 20px 0 10px;
+        }
+        
+        .age-badge {
+            display: inline-block;
+            background-color: #ff9800;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+        
+        .card {
+            background-color: #f1f8ff;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 3px solid #bbdefb;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .explanation {
+            background-color: #e8f5e9;
+            border-color: #a5d6a7;
+        }
+        
+        .code-box {
+            background-color: #263238;
+            color: #e0f2f1;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+            border: 3px solid #37474f;
+        }
+        
+        .tree-container {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        
+        .tree {
+            font-family: monospace;
+            white-space: pre;
+            background-color: #fff8e1;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #ffd54f;
+            overflow-x: auto;
+            font-size: 1.2em;
+            line-height: 1.4;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #4fc3f7;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px 5px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 0 #0288d1;
+        }
+        
+        .btn:hover {
+            background-color: #29b6f6;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 0 #0288d1;
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 0 #0288d1;
+        }
+        
+        .result-box {
+            background-color: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .highlight {
+            background-color: #fff9c4;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        
+        .interactive-section {
+            background-color: #f3e5f5;
+            border: 3px solid #ce93d8;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+        
+        .output {
+            background-color: #f5f5f5;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            min-height: 60px;
+            border: 2px solid #e0e0e0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px dashed #bdbdbd;
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .emoji {
+            font-size: 1.3em;
+            margin-right: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .tree {
+                font-size: 0.9em;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌳 Fa Bejárások - Tanuljunk Játékosan! <span class="age-badge">10 éveseknek</span></h1>
+            <p>Fedezd fel a bináris fákat és a különböző bejárási módokat!</p>
+        </header>
+        
+        <div class="card">
+            <h2>📚 Mi az a fa bejárás?</h2>
+            <p>Képzeld el, hogy egy nagy családfát akarsz bejárni, ahol mindenkit meg akarsz látogatni. A "bejárás" azt jelenti, hogy sorban meglátogatod mindenkit, de más-más sorrendben!</p>
+        </div>
+        
+        <div class="card explanation">
+            <h2>🎯 A feladatunk</h2>
+            <p>Ismerjük egy fa <span class="highlight">POSTORDER</span> bejárását (utoljára a főnök), és ki kell találnunk:</p>
+            <ol>
+                <li>Hogy néz ki a fa?</li>
+                <li>Mi lenne a fa <span class="highlight">INORDER</span> bejárása? (középen a főnök)</li>
+            </ol>
+            <p>Megadott POSTORDER: <span class="highlight">A B C D E F G H G F E D C B A</span></p>
+        </div>
+        
+        <h2>🧩 1. Rajzoljuk fel a fát!</h2>
+        <div class="card">
+            <p>A <span class="highlight">POSTORDER</span> bejárás jelentése: <strong>Bal gyerek → Jobb gyerek → Főnök</strong></p>
+            <p>Mivel az utolsó betű <span class="highlight">A</span>, ez a fa legfelső pontja (a gyökér)!</p>
+            
+            <div class="tree-container">
+                <div class="tree">
+        A (főnök)
+       /   \
+      B     B
+     / \   / \
+    C   C C   C
+   /\  /\ /\  /\
+  A B D E F G H G
+                </div>
+            </div>
+            
+            <p>A fa <strong>4 szint magas</strong> és <strong>teljes bináris fa</strong> (minden csomópontnak 0 vagy 2 gyereke van).</p>
+        </div>
+        
+        <h2>💡 2. Mi az INORDER bejárás?</h2>
+        <div class="card">
+            <p><span class="highlight">INORDER</span> jelentése: <strong>Bal gyerek → Főnök → Jobb gyerek</strong></p>
+            <p>Minden csomópontnál először a bal oldalt járjuk be, majd magát a csomópontot, végül a jobb oldalt.</p>
+            
+            <div class="code-box">
+// INORDER bejárás Pythonban
+function inorder(fa):
+    ha nem üres(fa) akkor
+        inorder(fa.bal_részfa)   // 1. Először bal
+        írd_ki(fa.gyökér)        // 2. Középen a főnök
+        inorder(fa.jobb_részfa)  // 3. Végül jobb
+            </div>
+        </div>
+        
+        <h2>🐍 3. Python program a megoldáshoz</h2>
+        <div class="card">
+            <p>Itt egy Python program, ami felépíti a fát és kiszámítja az INORDER bejárást:</p>
+            
+            <div class="code-box">
+class Csomopont:
+    """Fa csomópont - mint egy családtag"""
+    def __init__(self, nev):
+        self.nev = nev      # A csomópont neve (pl. "A")
+        self.bal = None     # Bal gyerek
+        self.jobb = None    # Jobb gyerek
+
+def epits_fat():
+    """Felépíti a fát a postorder alapján"""
+    # A fa gyökere (postorder utolsó eleme)
+    gyoker = Csomopont('A')
+    
+    # Második szint
+    gyoker.bal = Csomopont('B')
+    gyoker.jobb = Csomopont('B')
+    
+    # Harmadik szint
+    gyoker.bal.bal = Csomopont('C')
+    gyoker.bal.jobb = Csomopont('C')
+    gyoker.jobb.bal = Csomopont('C')
+    gyoker.jobb.jobb = Csomopont('C')
+    
+    # Negyedik szint
+    gyoker.bal.bal.bal = Csomopont('A')
+    gyoker.bal.bal.jobb = Csomopont('B')
+    gyoker.bal.jobb.bal = Csomopont('D')
+    gyoker.bal.jobb.jobb = Csomopont('E')
+    gyoker.jobb.bal.bal = Csomopont('F')
+    gyoker.jobb.bal.jobb = Csomopont('G')
+    gyoker.jobb.jobb.bal = Csomopont('H')
+    gyoker.jobb.jobb.jobb = Csomopont('G')
+    
+    return gyoker
+
+def inorder(gyoker):
+    """Inorder bejárás: bal -> főnök -> jobb"""
+    if gyoker:
+        eredmeny = []
+        # 1. Először bal
+        eredmeny.extend(inorder(gyoker.bal))
+        # 2. Középen a főnök
+        eredmeny.append(gyoker.nev)
+        # 3. Végül jobb
+        eredmeny.extend(inorder(gyoker.jobb))
+        return eredmeny
+    return []
+
+# Főprogram
+fa = epits_fat()
+print("Inorder bejárás:", " ".join(inorder(fa)))
+            </div>
+        </div>
+        
+        <h2>🎮 Interaktív rész - Próbáld ki te is!</h2>
+        <div class="interactive-section">
+            <h3>Válassz egy bejárási módot:</h3>
+            
+            <button class="btn" onclick="showPreorder()">
+                <span class="emoji">👑</span> Preorder (Először a főnök)
+            </button>
+            
+            <button class="btn" onclick="showInorder()">
+                <span class="emoji">⚖️</span> Inorder (Középen a főnök)
+            </button>
+            
+            <button class="btn" onclick="showPostorder()">
+                <span class="emoji">🏁</span> Postorder (Utoljára a főnök)
+            </button>
+            
+            <button class="btn" onclick="showLevelOrder()">
+                <span class="emoji">📊</span> Szintrendi (Mint egy lift)
+            </button>
+            
+            <div class="output" id="output">
+                Kattints egy gombra, hogy lásd a bejárás eredményét!
+            </div>
+            
+            <div class="result-box">
+                <h3>📋 A feladat megoldása:</h3>
+                <p><strong>a)</strong> A fa a fenti ábrán látható (4 szintes teljes bináris fa)</p>
+                <p><strong>b)</strong> Az inorder bejárás eredménye: 
+                    <span class="highlight" id="inorder-result">A C B D A C E B F C G D H G E F A</span>
+                </p>
+            </div>
+        </div>
+        
+        <h2>📖 Összefoglaló</h2>
+        <div class="card">
+            <p><span class="emoji">✅</span> <strong>POSTORDER</strong> (utoljára a főnök): Bal → Jobb → Főnök</p>
+            <p><span class="emoji">✅</span> <strong>INORDER</strong> (középen a főnök): Bal → Főnök → Jobb</p>
+            <p><span class="emoji">✅</span> <strong>PREORDER</strong> (először a főnök): Főnök → Bal → Jobb</p>
+            <p><span class="emoji">🎯</span> Ugyanaz a fa, de más sorrendben bejárva más eredményt kapunk!</p>
+        </div>
+        
+        <footer>
+            <p>Fedezzük fel a fák világát! 🌳✨</p>
+            <p>A kód GitHubra való feltöltésre kész - csak mentsd el .html fájlként!</p>
+        </footer>
+    </div>
+
+    <script>
+        // JavaScript változata a Python kódnak
+        class Csomopont {
+            constructor(nev) {
+                this.nev = nev;
+                this.bal = null;
+                this.jobb = null;
+            }
+        }
+        
+        function epitsFat() {
+            const gyoker = new Csomopont('A');
+            
+            // Második szint
+            gyoker.bal = new Csomopont('B');
+            gyoker.jobb = new Csomopont('B');
+            
+            // Harmadik szint
+            gyoker.bal.bal = new Csomopont('C');
+            gyoker.bal.jobb = new Csomopont('C');
+            gyoker.jobb.bal = new Csomopont('C');
+            gyoker.jobb.jobb = new Csomopont('C');
+            
+            // Negyedik szint
+            gyoker.bal.bal.bal = new Csomopont('A');
+            gyoker.bal.bal.jobb = new Csomopont('B');
+            gyoker.bal.jobb.bal = new Csomopont('D');
+            gyoker.bal.jobb.jobb = new Csomopont('E');
+            gyoker.jobb.bal.bal = new Csomopont('F');
+            gyoker.jobb.bal.jobb = new Csomopont('G');
+            gyoker.jobb.jobb.bal = new Csomopont('H');
+            gyoker.jobb.jobb.jobb = new Csomopont('G');
+            
+            return gyoker;
+        }
+        
+        // Bejárási függvények
+        function preorder(gyoker) {
+            if (!gyoker) return [];
+            return [gyoker.nev, ...preorder(gyoker.bal), ...preorder(gyoker.jobb)];
+        }
+        
+        function inorder(gyoker) {
+            if (!gyoker) return [];
+            return [...inorder(gyoker.bal), gyoker.nev, ...inorder(gyoker.jobb)];
+        }
+        
+        function postorder(gyoker) {
+            if (!gyoker) return [];
+            return [...postorder(gyoker.bal), ...postorder(gyoker.jobb), gyoker.nev];
+        }
+        
+        // Szintrendi bejárás (BFS)
+        function levelOrder(gyoker) {
+            if (!gyoker) return [];
+            
+            const eredmeny = [];
+            const sor = [gyoker];
+            
+            while (sor.length > 0) {
+                const csomopont = sor.shift();
+                eredmeny.push(csomopont.nev);
+                
+                if (csomopont.bal) sor.push(csomopont.bal);
+                if (csomopont.jobb) sor.push(csomopont.jobb);
+            }
+            
+            return eredmeny;
+        }
+        
+        // Interaktív rész függvényei
+        function showPreorder() {
+            const fa = epitsFat();
+            const eredmeny = preorder(fa);
+            document.getElementById('output').innerHTML = 
+                `<strong>👑 Preorder bejárás (Először a főnök):</strong><br>` +
+                `<span class="highlight">${eredmeny.join(' ')}</span><br><br>` +
+                `<em>Főnök → Bal gyerek → Jobb gyerek</em>`;
+        }
+        
+        function showInorder() {
+            const fa = epitsFat();
+            const eredmeny = inorder(fa);
+            document.getElementById('output').innerHTML = 
+                `<strong>⚖️ Inorder bejárás (Középen a főnök):</strong><br>` +
+                `<span class="highlight">${eredmeny.join(' ')}</span><br><br>` +
+                `<em>Bal gyerek → Főnök → Jobb gyerek</em>`;
+        }
+        
+        function showPostorder() {
+            const fa = epitsFat();
+            const eredmeny = postorder(fa);
+            document.getElementById('output').innerHTML = 
+                `<strong>🏁 Postorder bejárás (Utoljára a főnök):</strong><br>` +
+                `<span class="highlight">${eredmeny.join(' ')}</span><br><br>` +
+                `<em>Bal gyerek → Jobb gyerek → Főnök</em>`;
+        }
+        
+        function showLevelOrder() {
+            const fa = epitsFat();
+            const eredmeny = levelOrder(fa);
+            document.getElementById('output').innerHTML = 
+                `<strong>📊 Szintrendi bejárás (Mint egy lift):</strong><br>` +
+                `<span class="highlight">${eredmeny.join(' ')}</span><br><br>` +
+                `<em>1. szint → 2. szint → 3. szint → 4. szint</em>`;
+        }
+        
+        // Inicializálás
+        document.addEventListener('DOMContentLoaded', function() {
+            const fa = epitsFat();
+            const eredmeny = inorder(fa);
+            document.getElementById('inorder-result').textContent = eredmeny.join(' ');
+        });
+    </script>
+</body>
+</html>
