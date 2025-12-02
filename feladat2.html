@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Knight's Tour - Rekurzív Algoritmus Magyarázata</title>
+    <title>Lovasjárás - 10 éveseknek</title>
     <style>
         * {
             margin: 0;
@@ -12,9 +12,9 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
-            color: #e0e0e0;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Arial Rounded MT Bold', sans-serif;
+            background: linear-gradient(135deg, #ffcc00 0%, #ff9900 100%);
+            color: #333;
             min-height: 100vh;
             padding: 20px;
             line-height: 1.6;
@@ -23,32 +23,85 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            border: 8px solid #4a90e2;
         }
 
         header {
             text-align: center;
-            margin-bottom: 30px;
-            padding: 25px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 15px;
-            border: 1px solid rgba(100, 150, 200, 0.3);
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(45deg, #4a90e2, #357ae8);
+            border-radius: 20px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "🐎";
+            font-size: 100px;
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            opacity: 0.3;
+            transform: rotate(-30deg);
+        }
+
+        header::after {
+            content: "♞";
+            font-size: 100px;
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            opacity: 0.3;
+            transform: rotate(30deg);
         }
 
         h1 {
-            font-size: 2.5rem;
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2);
+            color: #ffeb3b;
+        }
+
+        h2 {
+            color: #4a90e2;
+            margin: 25px 0 15px;
+            font-size: 2rem;
+            border-bottom: 4px dotted #4a90e2;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #ff6b6b;
+            margin: 20px 0 10px;
+            font-size: 1.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: #ffeb3b;
             margin-bottom: 10px;
-            background: linear-gradient(45deg, #00b4db, #0083b0);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            font-weight: bold;
         }
 
-        h1::before {
-            content: "🔄 ";
+        .age-badge {
+            background: #ff6b6b;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            display: inline-block;
+            margin: 10px 0;
+            font-weight: bold;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 0 #d32f2f;
         }
 
-        .content {
+        .content-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 30px;
@@ -56,437 +109,940 @@
         }
 
         @media (max-width: 768px) {
-            .content {
+            .content-grid {
                 grid-template-columns: 1fr;
             }
         }
 
-        .explanation-box {
-            background: rgba(0, 20, 40, 0.8);
+        .card {
+            background: white;
             padding: 25px;
-            border-radius: 15px;
-            border: 1px solid rgba(100, 150, 200, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border: 5px solid;
+            transition: transform 0.3s ease;
         }
 
-        .explanation-box h2 {
-            color: #88c0d0;
-            margin-bottom: 20px;
-            font-size: 1.4rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .card:hover {
+            transform: translateY(-5px);
         }
 
-        .section {
-            margin-bottom: 30px;
+        .card-blue {
+            border-color: #4a90e2;
         }
 
-        h3 {
-            color: #50fa7b;
-            margin-bottom: 15px;
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .card-green {
+            border-color: #4caf50;
         }
 
-        p {
-            margin-bottom: 15px;
-            color: #c0c0c0;
+        .card-red {
+            border-color: #ff6b6b;
         }
 
-        .code-section {
-            background: rgba(0, 20, 40, 0.8);
+        .card-yellow {
+            border-color: #ffcc00;
+        }
+
+        .game-section {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
             padding: 25px;
-            border-radius: 15px;
-            border: 1px solid rgba(100, 150, 200, 0.2);
+            border-radius: 20px;
+            margin-top: 30px;
+            border: 5px solid #4a90e2;
         }
 
-        pre {
-            background: rgba(0, 0, 0, 0.6);
-            padding: 20px;
-            border-radius: 10px;
-            overflow-x: auto;
-            font-family: 'Consolas', monospace;
-            font-size: 0.95rem;
-            line-height: 1.5;
+        .input-area {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
         }
 
-        code {
-            color: #f8f8f2;
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
-        .keyword { color: #ff79c6; }
-        .function { color: #50fa7b; }
-        .comment { color: #6272a4; }
-        .number { color: #bd93f9; }
-        .string { color: #f1fa8c; }
+        label {
+            font-weight: bold;
+            color: #4a90e2;
+            font-size: 1.1rem;
+        }
 
-        .example {
-            background: rgba(0, 30, 60, 0.5);
+        input[type="number"] {
             padding: 15px;
-            border-radius: 10px;
-            margin: 15px 0;
-            border-left: 4px solid #ff79c6;
-        }
-
-        .step {
-            background: rgba(0, 40, 80, 0.3);
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-            border-left: 3px solid #00b4db;
-        }
-
-        .diagram {
+            font-size: 1.2rem;
+            border: 3px solid #4a90e2;
+            border-radius: 15px;
+            width: 100px;
             text-align: center;
+            background: #fff9c4;
+            font-weight: bold;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 18px 35px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 6px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 9px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 3px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-start {
+            background: linear-gradient(45deg, #4caf50, #2e7d32);
+            color: white;
+        }
+
+        .btn-reset {
+            background: linear-gradient(45deg, #ff6b6b, #d32f2f);
+            color: white;
+        }
+
+        .btn-tip {
+            background: linear-gradient(45deg, #ffcc00, #ff9800);
+            color: #333;
+        }
+
+        .chessboard-container {
+            background: #8b4513;
+            padding: 25px;
+            border-radius: 20px;
+            margin: 30px 0;
+            border: 8px solid #654321;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .chessboard {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 2px;
+            background: #654321;
+            padding: 10px;
+            border-radius: 10px;
+            border: 5px solid #333;
+            margin: 0 auto;
+            max-width: 500px;
+        }
+
+        .cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1rem;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .cell.light {
+            background: #f0d9b5;
+            color: #000;
+        }
+
+        .cell.dark {
+            background: #b58863;
+            color: #fff;
+        }
+
+        .cell.start {
+            background: linear-gradient(45deg, #4caf50, #2e7d32) !important;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 0 15px #4caf50;
+            animation: bounce 1s infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: scale(1); }
+            to { transform: scale(1.05); }
+        }
+
+        .cell.visited {
+            animation: visited-pulse 0.5s ease;
+        }
+
+        @keyframes visited-pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .cell-number {
+            font-size: 0.9rem;
+            font-weight: bold;
+            z-index: 1;
+        }
+
+        .cell-coords {
+            position: absolute;
+            font-size: 0.6rem;
+            opacity: 0.7;
+            top: 3px;
+            left: 3px;
+        }
+
+        .knight-icon {
+            font-size: 1.5rem;
+            margin-right: 5px;
+        }
+
+        .python-code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 15px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            border: 5px solid #444;
+        }
+
+        .code-keyword { color: #ff79c6; }
+        .code-function { color: #50fa7b; }
+        .code-string { color: #f1fa8c; }
+        .code-comment { color: #6272a4; }
+        .code-number { color: #bd93f9; }
+
+        .explanation {
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 8px solid #4caf50;
+        }
+
+        .tip-box {
+            background: #fff3e0;
+            padding: 15px;
+            border-radius: 15px;
+            margin: 15px 0;
+            border: 3px dashed #ff9800;
+        }
+
+        .fun-fact {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 15px;
+            margin: 15px 0;
+            border: 3px dotted #2196f3;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
             margin: 20px 0;
         }
 
-        .recursive-visual {
-            background: rgba(0, 30, 60, 0.6);
+        .stat-item {
+            text-align: center;
             padding: 15px;
-            border-radius: 10px;
-            font-family: 'Consolas', monospace;
+            background: white;
+            border-radius: 15px;
+            border: 3px solid #4a90e2;
         }
 
-        .tree-node {
-            background: rgba(0, 180, 219, 0.2);
-            padding: 10px;
-            margin: 5px;
-            border-radius: 5px;
-            display: inline-block;
-            border: 1px solid rgba(0, 180, 219, 0.4);
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ff6b6b;
+            margin-bottom: 5px;
         }
 
-        .active-node {
-            background: rgba(255, 107, 107, 0.3);
-            border: 2px solid #ff6b6b;
-        }
-
-        .note {
-            background: rgba(255, 193, 7, 0.1);
-            border-left: 4px solid #ffc107;
-            padding: 10px 15px;
-            margin: 15px 0;
-            border-radius: 4px;
+        .stat-label {
             font-size: 0.9rem;
-            color: #ffcc80;
+            color: #666;
         }
 
-        .algorithm-steps {
-            background: rgba(0, 40, 80, 0.4);
-            padding: 20px;
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            margin: 20px 0;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 8px solid #ffcc00;
+            border-top-color: #ff6b6b;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .knight-move {
+            display: inline-block;
+            padding: 5px 10px;
+            background: #4a90e2;
+            color: white;
             border-radius: 10px;
-            margin-top: 20px;
+            margin: 5px;
+            font-weight: bold;
         }
 
-        .step-list {
-            list-style-type: none;
-            padding-left: 0;
-        }
-
-        .step-list li {
-            margin-bottom: 10px;
-            padding-left: 25px;
-            position: relative;
-        }
-
-        .step-list li::before {
-            content: "▶";
-            color: #00b4db;
-            position: absolute;
-            left: 0;
-        }
-
-        .comparison {
+        .example-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-top: 30px;
+            grid-template-columns: repeat(8, 30px);
+            gap: 1px;
+            background: #333;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
         }
 
-        .comparison-item {
-            background: rgba(0, 30, 60, 0.5);
+        .example-cell {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .emoji {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+
+        .download-section {
+            text-align: center;
+            margin-top: 40px;
             padding: 20px;
-            border-radius: 10px;
+            background: linear-gradient(45deg, #2196f3, #0d47a1);
+            border-radius: 20px;
+            color: white;
         }
 
-        .comparison-item h4 {
-            color: #50fa7b;
-            margin-bottom: 15px;
+        .download-btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: #ffeb3b;
+            color: #333;
+            text-decoration: none;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 9px 0 rgba(0, 0, 0, 0.2);
+            background: #fff176;
+        }
+
+        .hint {
+            background: #fff9c4;
+            padding: 10px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border-left: 5px solid #ffd600;
+            display: none;
+        }
+
+        .achievement {
+            background: linear-gradient(45deg, #ffcc00, #ff9800);
+            padding: 15px;
+            border-radius: 15px;
+            margin: 15px 0;
+            text-align: center;
+            font-weight: bold;
+            color: #333;
+            display: none;
+            animation: achievement-pop 0.5s ease;
+        }
+
+        @keyframes achievement-pop {
+            0% { transform: scale(0); }
+            70% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 3px dotted #ccc;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Rekurzív Algoritmus - Knight's Tour</h1>
-            <p style="color: #88c0d0; font-size: 1.1rem;">A "rekur" a rekurzív algoritmusra utal - az algoritmus kulcsa</p>
+            <div class="age-badge">✨ 10 éveseknek ✨</div>
+            <h1>🐎 Lovasjárás 🐎</h1>
+            <div class="subtitle">A sakkló izgalmas kalandja a sakktáblán!</div>
+            <p style="color: #ffeb3b; font-size: 1.1rem;">Találd meg, hogyan járhatja be a ló az egész táblát!</p>
         </header>
 
-        <div class="content">
-            <div class="explanation-box">
-                <div class="section">
-                    <h3>🎯 Mi az a rekurzív algoritmus?</h3>
-                    <p>A rekurzív algoritmus egy olyan programozási technika, ahol egy <strong>függvény önmagát hívja meg</strong> egy probléma megoldása érdekében.</p>
-                    
-                    <div class="example">
-                        <p><strong>Analógia:</strong> Képzelj el egy tükörsort, ahol minden tükör a másik képét mutatja. Vagy gondolj egy orosz matryoshka babára - minden baba tartalmaz egy kisebb babát.</p>
-                    </div>
-                </div>
-
-                <div class="section">
-                    <h3>🔄 A Knight's Tour rekurzív megoldása</h3>
-                    <p>A Knight's Tour probléma tökéletes példa a rekurzió használatára:</p>
-                    
-                    <div class="recursive-visual">
-                        <div style="text-align: center; margin-bottom: 10px; color: #00b4db;">Rekurzív Hívások Láncolata</div>
-                        <div style="text-align: center;">
-                            <div class="tree-node active-node">solve(pozíció=1, lépés=1)</div>
-                            <div>↓</div>
-                            <div class="tree-node">solve(pozíció=2, lépés=2)</div>
-                            <div>↓</div>
-                            <div class="tree-node">solve(pozíció=3, lépés=3)</div>
-                            <div>↓</div>
-                            <div>...</div>
-                            <div>↓</div>
-                            <div class="tree-node">solve(pozíció=64, lépés=64) → <strong style="color: #50fa7b;">SIKER!</strong></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="section">
-                    <h3>📝 Alapvető részei a rekurziónak:</h3>
-                    <div class="algorithm-steps">
-                        <ul class="step-list">
-                            <li><strong>Alapeset (Base Case)</strong>: A rekurzió megállítási feltétele</li>
-                            <li><strong>Rekurzív eset</strong>: A függvény önmagának hívása</li>
-                            <li><strong>Progresszió</strong>: Minden hívás közelebb visz a megoldáshoz</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="code-section">
-                <h2>Python Kód - Rekurzív Megvalósítás</h2>
+        <div class="content-grid">
+            <div class="card card-blue">
+                <h2>🎯 Mi ez a játék?</h2>
+                <p>Van egy <strong>8×8-as sakktáblád</strong> és rajta egy <strong>ló figurád</strong> 🐎. A cél, hogy a lovat úgy mozgasd, hogy <strong>minden mezőre pontosan egyszer lépjen!</strong></p>
                 
-                <div class="section">
-                    <h3>🎯 1. Alapeset (Megállási feltétel)</h3>
-                    <pre><code><span class="keyword">def</span> <span class="function">solve_knights_tour</span>(x, y, move_count, board):
-    <span class="comment"># ALAPESET: ha elértük a 64. lépést</span>
-    <span class="keyword">if</span> move_count == <span class="number">64</span>:
-        <span class="keyword">return</span> <span class="keyword">True</span>  <span class="comment"># ✔ Megoldást találtunk!</span>
-    
-    <span class="comment"># ... további kód ...</span></code></pre>
-                    <p>Ez az a pont, ahol a rekurzió megáll. Ha mind a 64 mezőt bejártuk, visszatérünk True-val.</p>
-                </div>
-
-                <div class="section">
-                    <h3>🔄 2. Rekurzív hívások</h3>
-                    <pre><code>    <span class="comment"># Rekurzív rész: minden lehetséges lépés kipróbálása</span>
-    next_moves = warnsdorff_order(x, y, board)
-    
-    <span class="keyword">for</span> nx, ny <span class="keyword">in</span> next_moves:
-        <span class="comment"># Megjelöljük az aktuális mezőt</span>
-        board[nx][ny] = move_count + <span class="number">1</span>
-        
-        <span class="comment"># ⭐ REKURZÍV HIVÁS ⭐</span>
-        <span class="keyword">if</span> solve_knights_tour(nx, ny, move_count + <span class="number">1</span>, board):
-            <span class="keyword">return</span> <span class="keyword">True</span>  <span class="comment"># A rekurzió sikerrel járt</span>
-        
-        <span class="comment"># Backtracking - visszalépés ha nem sikerült</span>
-        board[nx][ny] = <span class="number">0</span></code></pre>
-                    <div class="note">
-                        <strong>Fontos:</strong> A függvény önmagát hívja meg <code>solve_knights_tour(nx, ny, move_count + 1, board)</code> kifejezéssel, új paraméterekkel.
-                    </div>
-                </div>
-
-                <div class="section">
-                    <h3>🔙 3. Backtracking (Visszalépés)</h3>
-                    <pre><code>        <span class="comment"># Ha nem vezet megoldáshoz, visszalépünk</span>
-        board[nx][ny] = <span class="number">0</span>  <span class="comment"># ← Visszaállítjuk a mezőt</span>
-    
-    <span class="keyword">return</span> <span class="keyword">False</span>  <span class="comment"># ❌ Ez az út zsákutca</span></code></pre>
-                    <p>Ha egy ág nem vezet megoldáshoz, "visszalépünk" és másik útvonalat próbálunk.</p>
+                <div class="fun-fact">
+                    <span class="emoji">💡</span>
+                    <strong>Fun fact:</strong> Ez a játék már 1000 éve ismert! Euler matematikus is foglalkozott vele.
                 </div>
             </div>
-        </div>
 
-        <div class="comparison">
-            <div class="comparison-item">
-                <h4>✅ Rekurzív algoritmus előnyei:</h4>
-                <ul class="step-list">
-                    <li>Tiszta, olvasható kód</li>
-                    <li>Természetes módon modellezi a fa-struktúrát</li>
-                    <li>Könnyű backtracking implementálása</li>
-                    <li>Elegáns megoldás keresési problémákra</li>
+            <div class="card card-green">
+                <h2>🐎 Hogyan mozog a ló?</h2>
+                <p>A ló "L" alakban ugrik:</p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>2 mezőt oldalra</strong> és <strong>1 mezőt fel/le</strong></li>
+                    <li>VAGY <strong>1 mezőt oldalra</strong> és <strong>2 mezőt fel/le</strong></li>
                 </ul>
-            </div>
-            
-            <div class="comparison-item">
-                <h4>⚠️ Rekurzív algoritmus hátrányai:</h4>
-                <ul class="step-list">
-                    <li>Nagy memóriaigény (call stack)</li>
-                    <li>Stack overflow veszély</li>
-                    <li>Néha nehezen követhető</li>
-                    <li>Nem mindig a leghatékonyabb</li>
-                </ul>
+                
+                <div class="tip-box">
+                    <span class="emoji">🎮</span>
+                    Próbáld ki a jobb felső sarokban a <strong>Kattints egy mezőre!</strong> gombot!
+                </div>
             </div>
         </div>
 
-        <div class="explanation-box" style="margin-top: 30px;">
-            <h2>🧠 Gyakorlati Példa - Hogyan működik?</h2>
+        <div class="game-section">
+            <h2>🎮 Játsszunk!</h2>
             
-            <div class="step">
-                <strong>1. lépés:</strong> A ló a (2,1) pozíción kezd. <code>solve(2,1,1)</code>
+            <div class="input-area">
+                <div class="input-group">
+                    <label for="startX"><span class="emoji">➡️</span> Oszlop (1-8):</label>
+                    <input type="number" id="startX" min="1" max="8" value="2">
+                </div>
+                
+                <div class="input-group">
+                    <label for="startY"><span class="emoji">⬇️</span> Sor (1-8):</label>
+                    <input type="number" id="startY" min="1" max="8" value="1">
+                </div>
+                
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span class="emoji">💡</span>
+                    <div>Próbáld: <button onclick="setExample(2,1)" style="padding: 5px 10px; background: #4a90e2; color: white; border: none; border-radius: 5px; cursor: pointer;">2,1</button>
+                    <button onclick="setExample(4,4)" style="padding: 5px 10px; background: #4caf50; color: white; border: none; border-radius: 5px; cursor: pointer;">4,4</button>
+                    <button onclick="setExample(1,1)" style="padding: 5px 10px; background: #ff6b6b; color: white; border: none; border-radius: 5px; cursor: pointer;">1,1</button></div>
+                </div>
             </div>
-            
-            <div class="step">
-                <strong>2. lépés:</strong> Próbálja az első lehetőséget (4,2). <code>solve(4,2,2)</code>
-            </div>
-            
-            <div class="step">
-                <strong>3. lépés:</strong> Innen tovább... <code>solve(6,3,3)</code>
-            </div>
-            
-            <div class="step">
-                <strong>...</strong> Sok rekurzív hívás...
-            </div>
-            
-            <div class="step">
-                <strong>63. lépés:</strong> <code>solve(7,8,63)</code> - majdnem kész!
-            </div>
-            
-            <div class="step">
-                <strong>64. lépés:</strong> <code>solve(5,6,64)</code> → return True!
-            </div>
-            
-            <div class="note" style="margin-top: 20px;">
-                <strong>Stack (Visszalépési lánc):</strong> Amikor a 64. lépés sikeres, a True érték "felfelé terjed" a rekurzív hívások láncán, minden függvényhívást megszüntetve.
-            </div>
-        </div>
 
-        <div class="explanation-box" style="margin-top: 30px;">
-            <h2>🎮 Interaktív Demo - Rekurzió Lépésről Lépésre</h2>
-            
-            <div style="text-align: center; margin: 20px 0;">
-                <button onclick="startRecursionDemo()" style="padding: 12px 24px; background: linear-gradient(45deg, #00b4db, #0083b0); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem;">
-                    ▶ Rekurzió Demo Indítása
+            <div class="button-container">
+                <button class="btn-start" onclick="startGame()">
+                    <span class="emoji">🚀</span>
+                    Indítsd a Ló Kalandját!
+                </button>
+                
+                <button class="btn-reset" onclick="resetGame()">
+                    <span class="emoji">🔄</span>
+                    Újrakezdés
+                </button>
+                
+                <button class="btn-tip" onclick="showHint()">
+                    <span class="emoji">❓</span>
+                    Segítség kéne!
                 </button>
             </div>
-            
-            <div id="recursion-demo" style="display: none; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px; margin-top: 20px;">
-                <div id="demo-output"></div>
-                <div style="margin-top: 15px;">
-                    <button onclick="nextStep()" style="padding: 8px 16px; background: #50fa7b; color: black; border: none; border-radius: 5px; cursor: pointer; margin-right: 10px;">
-                        Következő lépés
-                    </button>
-                    <button onclick="resetDemo()" style="padding: 8px 16px; background: #ff6b6b; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                        Újraindítás
-                    </button>
+
+            <div id="hint" class="hint">
+                <strong>Pro tippek:</strong><br>
+                1. Kezdd a középen (4,4) - könnyebb!<br>
+                2. A ló szereti a tábla közepét<br>
+                3. Ha nem sikerül, próbáld újra!<br>
+                4. Nézd meg a Python kódot alul!
+            </div>
+
+            <div id="achievement" class="achievement">
+                🎉 Hurrá! Megtaláltad a teljes utat! 🎉
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>A ló keresgéli az utat... Ez egy kicsit időbe telhet! 🐎</p>
+                <p><small>Míg vársz, tudtad, hogy a lónak 8-féleképpen lehet ugrani?</small></p>
+            </div>
+
+            <div class="chessboard-container">
+                <h3><span class="emoji">♜</span> Sakktábla</h3>
+                <div id="chessboard" class="chessboard"></div>
+                <p style="text-align: center; margin-top: 15px; color: #666;">
+                    <span class="emoji">💚</span> Zöld = Kezdőpont | <span class="emoji">🔢</span> Számok = Hányadik lépésben ért oda
+                </p>
+            </div>
+
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="steps">0</div>
+                    <div class="stat-label">Lépés</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="backtracks">0</div>
+                    <div class="stat-label">Visszalépés</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="time">0s</div>
+                    <div class="stat-label">Idő</div>
                 </div>
             </div>
         </div>
+
+        <h2><span class="emoji">🐍</span> Python Kód - Így működik a program</h2>
+        
+        <div class="python-code">
+<pre><code><span class="code-comment"># 1. A ló lehetséges lépései - "L" alakban!</span>
+<span class="code-keyword">lo_lepesek</span> = [
+    (<span class="code-number">2</span>, <span class="code-number">1</span>),   <span class="code-comment"># 2 jobbra, 1 le</span>
+    (<span class="code-number">1</span>, <span class="code-number">2</span>),   <span class="code-comment"># 1 jobbra, 2 le</span>
+    (<span class="code-number">-1</span>, <span class="code-number">2</span>),  <span class="code-comment"># 1 balra, 2 le</span>
+    (<span class="code-number">-2</span>, <span class="code-number">1</span>),  <span class="code-comment"># 2 balra, 1 le</span>
+    (<span class="code-number">-2</span>, <span class="code-number">-1</span>), <span class="code-comment"># 2 balra, 1 fel</span>
+    (<span class="code-number">-1</span>, <span class="code-number">-2</span>), <span class="code-comment"># 1 balra, 2 fel</span>
+    (<span class="code-number">1</span>, <span class="code-number">-2</span>),  <span class="code-comment"># 1 jobbra, 2 fel</span>
+    (<span class="code-number">2</span>, <span class="code-number">-1</span>)   <span class="code-comment"># 2 jobbra, 1 fel</span>
+]
+
+<span class="code-comment"># 2. Megnézzük, jó-e egy lépés</span>
+<span class="code-keyword">def</span> <span class="code-function">jo_lepese</span>(x, y):
+    <span class="code-keyword">if</span> x < <span class="code-number">0</span> <span class="code-keyword">or</span> x >= <span class="code-number">8</span> <span class="code-keyword">or</span> y < <span class="code-number">0</span> <span class="code-keyword">or</span> y >= <span class="code-number">8</span>:
+        <span class="code-keyword">return</span> <span class="code-keyword">False</span>  <span class="code-comment"># Kimenne a tábláról</span>
+    <span class="code-keyword">if</span> sakktabla[y][x] != <span class="code-number">0</span>:
+        <span class="code-keyword">return</span> <span class="code-keyword">False</span>  <span class="code-comment"># Már járt itt</span>
+    <span class="code-keyword">return</span> <span class="code-keyword">True</span>
+
+<span class="code-comment"># 3. Fő játékfüggvény - REKURZIÓ!</span>
+<span class="code-keyword">def</span> <span class="code-function">jatsz_lo_utjat</span>(x, y, lepes_szam):
+    <span class="code-comment"># Ha elértük a 64-et, siker! 🎉</span>
+    <span class="code-keyword">if</span> lepes_szam == <span class="code-number">64</span>:
+        <span class="code-keyword">return</span> <span class="code-keyword">True</span>
+    
+    <span class="code-comment"># Keresünk jó lépéseket</span>
+    <span class="code-keyword">for</span> dx, dy <span class="code-keyword">in</span> lo_lepesek:
+        uj_x, uj_y = x + dx, y + dy
+        
+        <span class="code-keyword">if</span> jo_lepese(uj_x, uj_y):
+            sakktabla[uj_y][uj_x] = lepes_szam + <span class="code-number">1</span>
+            
+            <span class="code-comment"># ⭐ REKURZÍV HIVÁS ⭐ - önmagát hívja!</span>
+            <span class="code-keyword">if</span> jatsz_lo_utjat(uj_x, uj_y, lepes_szam + <span class="code-number">1</span>):
+                <span class="code-keyword">return</span> <span class="code-keyword">True</span>
+            
+            <span class="code-comment"># Visszalépés ha nem sikerült</span>
+            sakktabla[uj_y][uj_x] = <span class="code-number">0</span>
+    
+    <span class="code-keyword">return</span> <span class="code-keyword">False</span></code></pre>
+        </div>
+
+        <div class="explanation">
+            <h3><span class="emoji">📚</span> Magyarázat 10 éveseknek</h3>
+            
+            <div class="content-grid">
+                <div class="card card-red">
+                    <h4>🔄 Mi az a REKURZIÓ?</h4>
+                    <p>Olyan, mintha mesélnél egy mesét, és a mesében lenne egy kisebb mese, és azban is lenne egy mese... A program is így működik: a <code>jatsz_lo_utjat</code> függvény önmagát hívja!</p>
+                </div>
+                
+                <div class="card card-yellow">
+                    <h4>🔙 Mi az a BACKTRACKING?</h4>
+                    <p>Mint egy labirintusban: ha zsákutcába érsz, visszamész az utolsó elágazáshoz, és másik utat próbálsz. Pontosan ezt csinálja a ló is!</p>
+                </div>
+            </div>
+            
+            <div class="tip-box">
+                <span class="emoji">🎲</span>
+                <strong>Próbáld ki ezeket:</strong><br>
+                • 1,1 - sarokban (nehéz!)<br>
+                • 4,4 - középen (könnyű!)<br>
+                • 8,8 - másik sarok (izgalmas!)
+            </div>
+        </div>
+
+        <div class="download-section">
+            <h3><span class="emoji">💾</span> Töltsd le a játékot!</h3>
+            <p>Mentsd el ezt az oldalt, és játszhatsz offline is!</p>
+            <a href="#" class="download-btn" onclick="downloadCode()">
+                <span class="emoji">⬇️</span> Letöltés .html fájlként
+            </a>
+            <p style="margin-top: 10px; font-size: 0.9rem;">Kattints, majd mentés másként...</p>
+        </div>
+
+        <footer>
+            <p>Készítette: Python és JavaScript varázslatával ✨</p>
+            <p>Köszönöm, hogy játszottál a Lovasjárás játékkal! 🐎</p>
+            <p style="margin-top: 10px; color: #888;">© 2024 - Mindenki számára, de főleg 10 éveseknek! 😊</p>
+        </footer>
     </div>
 
     <script>
-        let recursionSteps = [];
-        let currentStep = 0;
-        
-        function startRecursionDemo() {
-            document.getElementById('recursion-demo').style.display = 'block';
-            document.getElementById('demo-output').innerHTML = '';
-            
-            recursionSteps = [
-                "1. solve(2,1,1) - Kezdőpozíció",
-                "2. ↓ Nézzük a lehetséges lépéseket...",
-                "3. → Próbáljuk: solve(4,2,2)",
-                "4. ↓ solve(4,2,2) - Második lépés",
-                "5. → Próbáljuk: solve(6,3,3)",
-                "6. ↓ Rekurzívan mélyebbre megyünk...",
-                "7. ... több rekurzív hívás ...",
-                "8. solve(7,8,63) - Utolsó előtti lépés",
-                "9. → Találtunk egy érvényes lépést!",
-                "10. solve(5,6,64) - MINDEN mezőt bejártunk!",
-                "11. ✅ return True (Alapeset elérve)",
-                "12. ⬆ True terjed felfelé a hívási láncon",
-                "13. ⬆ Minden függvény visszatér True-val",
-                "14. ⬆ Vissza a kezdőfüggvényhez",
-                "15. 🎉 MEGOLDÁS TALÁLVA!"
-            ];
-            
-            currentStep = 0;
-            nextStep();
+        // ======================
+        // 1. Alap változók
+        // ======================
+        const boardSize = 8;
+        let board = [];
+        let startTime;
+        let backtracks = 0;
+        let isRunning = false;
+
+        // A ló lehetséges lépései
+        const knightMoves = [
+            [2, 1], [1, 2], [-1, 2], [-2, 1],
+            [-2, -1], [-1, -2], [1, -2], [2, -1]
+        ];
+
+        // ======================
+        // 2. Inicializálás
+        // ======================
+        function init() {
+            createChessboard();
+            resetGame();
         }
-        
-        function nextStep() {
-            if (currentStep < recursionSteps.length) {
-                const step = recursionSteps[currentStep];
-                const demoDiv = document.getElementById('demo-output');
-                
-                const stepDiv = document.createElement('div');
-                stepDiv.className = 'step';
-                stepDiv.style.animation = 'visited-pulse 0.5s ease';
-                stepDiv.innerHTML = `<strong>${currentStep + 1}.</strong> ${step}`;
-                
-                demoDiv.appendChild(stepDiv);
-                demoDiv.scrollTop = demoDiv.scrollHeight;
-                
-                currentStep++;
-                
-                if (currentStep >= recursionSteps.length) {
-                    setTimeout(() => {
-                        const finalDiv = document.createElement('div');
-                        finalDiv.style.cssText = 'background: linear-gradient(45deg, #50fa7b, #00b4db); padding: 15px; border-radius: 8px; margin-top: 10px; text-align: center; font-weight: bold;';
-                        finalDiv.textContent = '✨ A rekurzív algoritmus sikeresen befejeződött!';
-                        demoDiv.appendChild(finalDiv);
-                    }, 500);
+
+        function createChessboard() {
+            const chessboard = document.getElementById('chessboard');
+            chessboard.innerHTML = '';
+            
+            for (let y = 0; y < boardSize; y++) {
+                for (let x = 0; x < boardSize; x++) {
+                    const cell = document.createElement('div');
+                    cell.className = `cell ${(x + y) % 2 === 0 ? 'light' : 'dark'}`;
+                    cell.id = `cell-${x}-${y}`;
+                    cell.dataset.x = x;
+                    cell.dataset.y = y;
+                    
+                    // Koordináták
+                    const coords = document.createElement('div');
+                    coords.className = 'cell-coords';
+                    coords.textContent = `${x + 1},${y + 1}`;
+                    cell.appendChild(coords);
+                    
+                    // Lépésszám
+                    const number = document.createElement('div');
+                    number.className = 'cell-number';
+                    cell.appendChild(number);
+                    
+                    // Kattintásra választás
+                    cell.onclick = () => selectCell(x, y);
+                    
+                    chessboard.appendChild(cell);
                 }
             }
         }
-        
-        function resetDemo() {
-            document.getElementById('demo-output').innerHTML = '';
-            currentStep = 0;
-        }
-        
-        // Backtracking példa
-        function backtrackingExample() {
-            console.log("Backtracking példa:");
+
+        // ======================
+        // 3. Segédfüggvények
+        // ======================
+        function selectCell(x, y) {
+            document.getElementById('startX').value = x + 1;
+            document.getElementById('startY').value = y + 1;
             
-            function backtrack(path, depth, maxDepth) {
-                console.log(" ".repeat(depth) + "→ backtrack(" + path + ", " + depth + ")");
+            // Animáció a kiválasztott cellára
+            const cell = document.getElementById(`cell-${x}-${y}`);
+            cell.style.animation = 'visited-pulse 0.5s ease';
+            setTimeout(() => {
+                cell.style.animation = '';
+            }, 500);
+        }
+
+        function setExample(x, y) {
+            document.getElementById('startX').value = x;
+            document.getElementById('startY').value = y;
+            showMessage(`Beállítva: ${x}, ${y}`, '#4caf50');
+        }
+
+        function showMessage(text, color) {
+            const msg = document.createElement('div');
+            msg.textContent = text;
+            msg.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${color};
+                color: white;
+                padding: 15px;
+                border-radius: 10px;
+                z-index: 1000;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                animation: slideIn 0.3s ease;
+            `;
+            
+            document.body.appendChild(msg);
+            
+            setTimeout(() => {
+                msg.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => msg.remove(), 300);
+            }, 2000);
+        }
+
+        // CSS animációk
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // ======================
+        // 4. Fő játéklogika
+        // ======================
+        function startGame() {
+            if (isRunning) return;
+            
+            const startX = parseInt(document.getElementById('startX').value) - 1;
+            const startY = parseInt(document.getElementById('startY').value) - 1;
+            
+            if (startX < 0 || startX >= boardSize || startY < 0 || startY >= boardSize) {
+                showMessage('Hiba: 1 és 8 között válassz!', '#ff6b6b');
+                return;
+            }
+            
+            resetGame();
+            isRunning = true;
+            startTime = Date.now();
+            backtracks = 0;
+            
+            // Játék indítása aszinkron módon
+            document.getElementById('loading').style.display = 'block';
+            
+            setTimeout(() => {
+                board = Array(boardSize).fill().map(() => Array(boardSize).fill(0));
+                board[startY][startX] = 1;
                 
-                if (depth === maxDepth) {
-                    console.log(" ".repeat(depth) + "✓ Megoldás: " + path);
+                const success = solveKnightTour(startX, startY, 2);
+                
+                updateDisplay();
+                isRunning = false;
+                document.getElementById('loading').style.display = 'none';
+                
+                if (success) {
+                    const time = ((Date.now() - startTime) / 1000).toFixed(2);
+                    document.getElementById('time').textContent = time + 's';
+                    showAchievement();
+                    showMessage('🎉 Siker! A ló bejárta az egész táblát!', '#4caf50');
+                } else {
+                    showMessage('😔 Sajnos nem találtam teljes utat. Próbáld újra!', '#ff6b6b');
+                }
+            }, 100);
+        }
+
+        function solveKnightTour(x, y, moveNum) {
+            // Alapeset: minden mezőt bejártunk
+            if (moveNum > boardSize * boardSize) {
+                return true;
+            }
+            
+            // Lehetséges lépések keresése
+            const candidates = [];
+            
+            for (const [dx, dy] of knightMoves) {
+                const nx = x + dx;
+                const ny = y + dy;
+                
+                if (isValidMove(nx, ny)) {
+                    const degree = countPossibleMoves(nx, ny);
+                    candidates.push({nx, ny, degree});
+                }
+            }
+            
+            // Rendezés a legkevesebb lehetőség szerint (Warnsdorff)
+            candidates.sort((a, b) => a.degree - b.degree);
+            
+            // Lépések kipróbálása
+            for (const cand of candidates) {
+                board[cand.ny][cand.nx] = moveNum;
+                
+                // Frissítjük a kijelzést
+                if (moveNum % 5 === 0) {
+                    updateDisplay();
+                }
+                
+                // Rekurzív hívás
+                if (solveKnightTour(cand.nx, cand.ny, moveNum + 1)) {
                     return true;
                 }
                 
-                // Próbáljunk különböző irányokat
-                for (let direction of ["E", "S", "W", "N"]) {
-                    let newPath = path + direction;
-                    
-                    // Szimuláljunk egy zsákutat
-                    if (depth === 2 && direction === "W") {
-                        console.log(" ".repeat(depth) + "✗ Zsákutca: " + newPath);
-                        continue; // Visszalépés
-                    }
-                    
-                    console.log(" ".repeat(depth) + "↓ Próbáljuk: " + newPath);
-                    
-                    if (backtrack(newPath, depth + 1, maxDepth)) {
-                        return true;
-                    }
-                    
-                    console.log(" ".repeat(depth) + "↺ Visszalépés " + newPath + "-ből");
-                }
-                
-                return false;
+                // Backtracking
+                board[cand.ny][cand.nx] = 0;
+                backtracks++;
+                document.getElementById('backtracks').textContent = backtracks;
             }
             
-            backtrack("", 0, 3);
+            return false;
         }
+
+        function isValidMove(x, y) {
+            return x >= 0 && x < boardSize && y >= 0 && y < boardSize && board[y][x] === 0;
+        }
+
+        function countPossibleMoves(x, y) {
+            let count = 0;
+            for (const [dx, dy] of knightMoves) {
+                const nx = x + dx;
+                const ny = y + dy;
+                if (isValidMove(nx, ny)) {
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        // ======================
+        // 5. Kijelző frissítés
+        // ======================
+        function updateDisplay() {
+            const startX = parseInt(document.getElementById('startX').value) - 1;
+            const startY = parseInt(document.getElementById('startY').value) - 1;
+            
+            let maxStep = 0;
+            
+            for (let y = 0; y < boardSize; y++) {
+                for (let x = 0; x < boardSize; x++) {
+                    const cell = document.getElementById(`cell-${x}-${y}`);
+                    const number = cell.querySelector('.cell-number');
+                    
+                    // Kezdőcellát zöldre festjük
+                    if (x === startX && y === startY && board[y][x] === 1) {
+                        cell.className = `cell start`;
+                    } else {
+                        cell.className = `cell ${(x + y) % 2 === 0 ? 'light' : 'dark'}`;
+                    }
+                    
+                    // Lépésszám beállítása
+                    if (board[y][x] > 0) {
+                        number.textContent = board[y][x];
+                        maxStep = Math.max(maxStep, board[y][x]);
+                    } else {
+                        number.textContent = '';
+                    }
+                }
+            }
+            
+            document.getElementById('steps').textContent = maxStep;
+        }
+
+        function resetGame() {
+            board = Array(boardSize).fill().map(() => Array(boardSize).fill(0));
+            backtracks = 0;
+            document.getElementById('steps').textContent = '0';
+            document.getElementById('backtracks').textContent = '0';
+            document.getElementById('time').textContent = '0s';
+            document.getElementById('achievement').style.display = 'none';
+            document.getElementById('hint').style.display = 'none';
+            
+            updateDisplay();
+        }
+
+        // ======================
+        // 6. Extra funkciók
+        // ======================
+        function showHint() {
+            const hint = document.getElementById('hint');
+            hint.style.display = 'block';
+            setTimeout(() => {
+                hint.style.display = 'none';
+            }, 5000);
+        }
+
+        function showAchievement() {
+            const achievement = document.getElementById('achievement');
+            achievement.style.display = 'block';
+            setTimeout(() => {
+                achievement.style.display = 'none';
+            }, 3000);
+        }
+
+        function downloadCode() {
+            // Létrehozunk egy Blob-ot a HTML kódból
+            const htmlContent = document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            
+            // Létrehozunk egy letöltési linket
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'lovasjaras-jatek-10-eveseknek.html';
+            a.click();
+            
+            // Felszabadítjuk az URL-t
+            setTimeout(() => URL.revokeObjectURL(url), 100);
+            
+            showMessage('⬇️ Letöltés elkezdődött!', '#2196f3');
+        }
+
+        // ======================
+        // 7. Billentyűzet támogatás
+        // ======================
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                startGame();
+            } else if (e.key === 'Escape') {
+                resetGame();
+            } else if (e.key === 'h' || e.key === 'H') {
+                showHint();
+            }
+        });
+
+        // ======================
+        // 8. Indítás
+        // ======================
+        window.onload = init;
+
+        // ======================
+        // 9. Információ a console-ban
+        // ======================
+        console.log(`
+        🐎 LOVASJÁRÁS JÁTÉK 🐎
+        ====================
+        Üdvözöllek a Knight's Tour játékban!
+        
+        Használható billentyűk:
+        • Enter vagy Space: Játék indítása
+        • Escape: Újrakezdés
+        • H: Segítség megjelenítése
+        
+        Jó szórakozást! 🎮
+        `);
     </script>
 </body>
 </html>
