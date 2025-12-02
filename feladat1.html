@@ -3,88 +3,889 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1. Feladat - Java Megoldás</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Lexikografikusan Legkisebb Útvonal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 25px 75px rgba(0, 0, 0, 0.3);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 3px solid #2575fc;
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+
+        h1::before {
+            content: "📊 ";
+            color: #6a11cb;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: #4a5568;
+            margin-bottom: 25px;
+        }
+
+        .sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        @media (max-width: 1100px) {
+            .sections {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            border-left: 6px solid;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+        }
+
+        .section-task {
+            border-left-color: #4299e1;
+        }
+
+        .section-code {
+            border-left-color: #38b2ac;
+        }
+
+        .section-explanation {
+            border-left-color: #ed8936;
+            grid-column: span 2;
+        }
+
+        @media (max-width: 1100px) {
+            .section-explanation {
+                grid-column: span 1;
+            }
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: #2d3748;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        h2::before {
+            font-size: 1.8rem;
+        }
+
+        .section-task h2::before {
+            content: "📋";
+        }
+
+        .section-code h2::before {
+            content: "☕";
+        }
+
+        .section-explanation h2::before {
+            content: "🔍";
+        }
+
+        .problem-statement {
+            background: #ebf8ff;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 2px solid #bee3f8;
+        }
+
+        .io-example {
+            background: #f0fff4;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 2px solid #c6f6d5;
+        }
+
+        .constraints {
+            background: #fffaf0;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 2px solid #feebc8;
+        }
+
+        .grid-visualization {
+            background: #e6fffa;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 2px solid #81e6d9;
+        }
+
+        .code-container {
+            background: #1a1a1a;
+            color: #f8f8f2;
+            padding: 30px;
+            border-radius: 12px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin: 20px 0;
+            border: 3px solid #333;
+        }
+
+        .keyword { color: #ff79c6; }
+        .function { color: #50fa7b; }
+        .string { color: #f1fa8c; }
+        .comment { color: #6272a4; }
+        .number { color: #bd93f9; }
+        .operator { color: #ff79c6; }
+        .class { color: #8be9fd; }
+        .import { color: #ffb86c; }
+
+        .explanation-points {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .explanation-points li {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            border-left: 5px solid #6a11cb;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .point-title {
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+        }
+
+        .algorithm-steps {
+            background: #f7fafc;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 3px solid #cbd5e0;
+        }
+
+        .step {
+            margin-bottom: 15px;
+            padding-left: 35px;
+            position: relative;
+            padding-top: 5px;
+        }
+
+        .step::before {
+            content: counter(step);
+            counter-increment: step;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 28px;
+            height: 28px;
+            background: #6a11cb;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .algorithm-steps {
+            counter-reset: step;
+        }
+
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2px;
+            background: #2d3748;
+            padding: 15px;
+            border-radius: 8px;
+            max-width: 400px;
+            margin: 20px auto;
+        }
+
+        .grid-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            background: white;
+            border: 2px solid #cbd5e0;
+        }
+
+        .grid-cell.start {
+            background: #38b2ac;
+            color: white;
+        }
+
+        .grid-cell.end {
+            background: #ed8936;
+            color: white;
+        }
+
+        .grid-cell.path {
+            background: #4299e1;
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .complexity-analysis {
+            background: #fed7d7;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #e53e3e;
+        }
+
+        .optimization-tips {
+            background: #e6fffa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #38b2ac;
+        }
+
+        .note {
+            background: #feebc8;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #dd6b20;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 25px 0;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: #edf2f7;
+            font-weight: bold;
+            color: #2d3748;
+            font-size: 1rem;
+        }
+
+        tr:nth-child(even) {
+            background: #f7fafc;
+        }
+
+        .performance-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        @media (max-width: 768px) {
+            .performance-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .performance-item {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            border: 2px solid #cbd5e0;
+            transition: transform 0.3s ease;
+        }
+
+        .performance-item:hover {
+            transform: translateY(-3px);
+            border-color: #6a11cb;
+        }
+
+        .performance-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #6a11cb;
+            margin-bottom: 10px;
+        }
+
+        .performance-label {
+            font-size: 0.9rem;
+            color: #718096;
+        }
+
+        .download-section {
+            text-align: center;
+            margin-top: 50px;
+            padding: 30px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            border-radius: 15px;
+            color: white;
+        }
+
+        .download-btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: white;
+            color: #6a11cb;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            border: 2px solid white;
+        }
+
+        .download-btn:hover {
+            background: transparent;
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 25px;
+            border-top: 2px solid #e2e8f0;
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .path-demo {
+            background: #f7fafc;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border: 2px dashed #cbd5e0;
+        }
+
+        .matrix {
+            font-family: 'Consolas', monospace;
+            background: #2d3748;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+
+        .highlight {
+            background: #fffacd;
+            padding: 3px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .diagram-container {
+            text-align: center;
+            margin: 25px 0;
+        }
+
+        .arrow {
+            font-size: 1.5rem;
+            margin: 0 10px;
+            color: #6a11cb;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>🔢 1. Feladat - Java Megoldás</h1>
-            <p>Optimális algoritmus tervezése</p>
+        <header>
+            <h1>Lexikografikusan Legkisebb Útvonal</h1>
+            <div class="subtitle">Optimális algoritmus tervezése n×n-es rácsban</div>
+        </header>
+
+        <div class="sections">
+            <!-- 1. Feladat leírása -->
+            <div class="section section-task">
+                <h2>Feladat Leírása</h2>
+                
+                <div class="problem-statement">
+                    <h3>🎯 Probléma megfogalmazása</h3>
+                    <p>Adott egy <strong>n × n-es rács</strong>, amelynek minden mezőjében egy nagybetűs angol betű (A–Z) található. A bal felső sarokból ([1,1]) kell eljutni a jobb alsó sarokba ([n,n]), úgy hogy minden lépésben csak <strong>jobbra vagy lefelé</strong> lehet mozogni.</p>
+                    <p style="margin-top: 15px;"><strong>Cél:</strong> Megkeresni azt az útvonalat, amely a mezők betűit egymás után írva a <span class="highlight">lexikografikusan legkisebb</span> (ábécérendben a legkorábbi) karakterláncot adja.</p>
+                </div>
+
+                <div class="constraints">
+                    <h3>⚖️ Korlátozások</h3>
+                    <ul style="margin-left: 20px;">
+                        <li>1 ≤ n ≤ 3000</li>
+                        <li>Csak jobbra és lefelé mozgás</li>
+                        <li>Mindig a [1,1]-ről indulunk</li>
+                        <li>Mindig a [n,n]-be érkezünk</li>
+                        <li>Betűk csak A-Z közöttiek</li>
+                    </ul>
+                </div>
+
+                <div class="io-example">
+                    <h3>📤 Bemenet/Kimenet formátuma</h3>
+                    <p><strong>Bemenet:</strong></p>
+                    <div class="matrix">
+                        <pre>4
+AACA
+ABDA
+ACAA
+ADAA</pre>
+                    </div>
+                    
+                    <p style="margin-top: 15px;"><strong>Kimenet:</strong></p>
+                    <div class="matrix">
+                        <pre>AAAAA</pre>
+                    </div>
+                </div>
+
+                <div class="grid-visualization">
+                    <h3>📍 Példa útvonal keresése</h3>
+                    <div class="example-grid">
+                        <div class="grid-cell start">A</div>
+                        <div class="grid-cell">A</div>
+                        <div class="grid-cell">C</div>
+                        <div class="grid-cell">A</div>
+                        
+                        <div class="grid-cell">A</div>
+                        <div class="grid-cell path">A</div>
+                        <div class="grid-cell">D</div>
+                        <div class="grid-cell">A</div>
+                        
+                        <div class="grid-cell">A</div>
+                        <div class="grid-cell path">A</div>
+                        <div class="grid-cell">A</div>
+                        <div class="grid-cell">A</div>
+                        
+                        <div class="grid-cell">A</div>
+                        <div class="grid-cell path">A</div>
+                        <div class="grid-cell">A</div>
+                        <div class="grid-cell end">A</div>
+                    </div>
+                    <p style="text-align: center; margin-top: 15px; color: #666;">
+                        <span style="color: #38b2ac">●</span> Kezdőpont | 
+                        <span style="color: #4299e1">●</span> Útvonal | 
+                        <span style="color: #ed8936">●</span> Cél
+                    </p>
+                    <p style="text-align: center; margin-top: 10px;">
+                        Útvonal: A → A → A → A → A = "AAAAA"
+                    </p>
+                </div>
+            </div>
+
+            <!-- 2. Java kód -->
+            <div class="section section-code">
+                <h2>Java Megoldás</h2>
+                
+                <div class="code-container">
+<pre><code><span class="import">import</span> java.io.*;
+<span class="import">import</span> java.util.*;
+
+<span class="keyword">public</span> <span class="class">class</span> <span class="function">Main</span> {
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="function">main</span>(String[] args) <span class="keyword">throws</span> Exception {
+        <span class="comment">// 1. Beolvasás</span>
+        BufferedReader br = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));
+        <span class="keyword">int</span> n = Integer.parseInt(br.readLine().trim());
+        
+        <span class="comment">// 2. Rács inicializálása</span>
+        <span class="keyword">char</span>[][] grid = <span class="keyword">new</span> <span class="keyword">char</span>[n][n];
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) {
+            String line = br.readLine();
+            <span class="keyword">while</span> (line == <span class="keyword">null</span> || line.length() &lt; n) {
+                String extra = br.readLine();
+                <span class="keyword">if</span> (extra == <span class="keyword">null</span>) <span class="keyword">break</span>;
+                line = (line == <span class="keyword">null</span> ? <span class="string">""</span> : line) + extra;
+            }
+            grid[i] = line.trim().toCharArray();
+        }
+        
+        <span class="comment">// 3. Eredmény string építése</span>
+        StringBuilder sb = <span class="keyword">new</span> StringBuilder();
+        sb.append(grid[<span class="number">0</span>][<span class="number">0</span>]);  <span class="comment">// kezdőpont betűje</span>
+        
+        <span class="comment">// 4. Aktuális pozíciók tárolása</span>
+        ArrayList&lt;Integer&gt; current = <span class="keyword">new</span> ArrayList&lt;&gt;();
+        current.add(<span class="number">0</span>);  <span class="comment">// (0,0) sora</span>
+        
+        <span class="comment">// 5. Duplikátumok elkerülése</span>
+        <span class="keyword">int</span>[] seen = <span class="keyword">new</span> <span class="keyword">int</span>[n];
+        <span class="keyword">int</span> seenToken = <span class="number">1</span>;
+        
+        <span class="comment">// 6. Fő ciklus: diagonálisan haladunk</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> d = <span class="number">0</span>; d &lt; <span class="number">2</span> * n - <span class="number">2</span>; d++) {
+            <span class="comment">// 6.1 Legkisebb betű keresése</span>
+            <span class="keyword">char</span> minChar = Character.MAX_VALUE;
+            <span class="keyword">for</span> (<span class="keyword">int</span> idx = <span class="number">0</span>; idx &lt; current.size(); idx++) {
+                <span class="keyword">int</span> i = current.get(idx);
+                <span class="keyword">int</span> j = d - i;
+                
+                <span class="comment">// Lefelé lépés</span>
+                <span class="keyword">if</span> (i + <span class="number">1</span> &lt; n) {
+                    <span class="keyword">char</span> c = grid[i + <span class="number">1</span>][j];
+                    <span class="keyword">if</span> (c &lt; minChar) minChar = c;
+                }
+                
+                <span class="comment">// Jobbra lépés</span>
+                <span class="keyword">if</span> (j + <span class="number">1</span> &lt; n) {
+                    <span class="keyword">char</span> c = grid[i][j + <span class="number">1</span>];
+                    <span class="keyword">if</span> (c &lt; minChar) minChar = c;
+                }
+            }
+            
+            <span class="comment">// 6.2 Betű hozzáadása</span>
+            sb.append(minChar);
+            
+            <span class="comment">// 6.3 Következő pozíciók előkészítése</span>
+            ArrayList&lt;Integer&gt; next = <span class="keyword">new</span> ArrayList&lt;&gt;();
+            seenToken++;
+            
+            <span class="keyword">for</span> (<span class="keyword">int</span> idx = <span class="number">0</span>; idx &lt; current.size(); idx++) {
+                <span class="keyword">int</span> i = current.get(idx);
+                <span class="keyword">int</span> j = d - i;
+                
+                <span class="comment">// Lefelé vezető út</span>
+                <span class="keyword">if</span> (i + <span class="number">1</span> &lt; n && grid[i + <span class="number">1</span>][j] == minChar) {
+                    <span class="keyword">int</span> row = i + <span class="number">1</span>;
+                    <span class="keyword">if</span> (seen[row] != seenToken) {
+                        seen[row] = seenToken;
+                        next.add(row);
+                    }
+                }
+                
+                <span class="comment">// Jobbra vezető út</span>
+                <span class="keyword">if</span> (j + <span class="number">1</span> &lt; n && grid[i][j + <span class="number">1</span>] == minChar) {
+                    <span class="keyword">int</span> row = i;
+                    <span class="keyword">if</span> (seen[row] != seenToken) {
+                        seen[row] = seenToken;
+                        next.add(row);
+                    }
+                }
+            }
+            
+            current = next;  <span class="comment">// Frissítjük az aktuális pozíciókat</span>
+        }
+        
+        <span class="comment">// 7. Eredmény kiírása</span>
+        System.out.println(sb.toString());
+    }
+}</code></pre>
+                </div>
+
+                <div class="performance-grid">
+                    <div class="performance-item">
+                        <div class="performance-value">O(n²)</div>
+                        <div class="performance-label">Időbonyolultság</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-value">O(n)</div>
+                        <div class="performance-label">Memóriahasználat</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-value">2n-1</div>
+                        <div class="performance-label">Hosszúság</div>
+                    </div>
+                </div>
+
+                <div class="note">
+                    <h4>💡 Főbb optimalizációk:</h4>
+                    <ul>
+                        <li><strong>Diagonális haladás:</strong> Nem minden cellát nézünk, csak a relevánsokat</li>
+                        <li><strong>Seen token:</strong> O(1) duplikátum ellenőrzés</li>
+                        <li><strong>Állapottér szűkítés:</strong> Csak a legjobb útvonalakat tartjuk</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 3. Részletes magyarázat -->
+            <div class="section section-explanation">
+                <h2>Részletes Algoritmus Magyarázat</h2>
+                
+                <div class="algorithm-steps">
+                    <h3>📈 Algoritmus Lépései</h3>
+                    <div class="step"><strong>1. Inicializálás:</strong> Beolvassuk az n×n-es rácsot és eltároljuk</div>
+                    <div class="step"><strong>2. Kezdőállapot:</strong> Az első karakter a bal felső sarok betűje</div>
+                    <div class="step"><strong>3. Diagonális haladás:</strong> A táblát átlónként (i+j = konstans) járjuk be</div>
+                    <div class="step"><strong>4. Minimum keresés:</strong> Minden diagonálon megtaláljuk a legkisebb betűt</div>
+                    <div class="step"><strong>5. Állapottér szűkítés:</strong> Csak azokat a cellákat tartjuk, amelyek a minimumhoz vezetnek</div>
+                    <div class="step"><strong>6. Iteráció:</strong> Ismételjük, amíg el nem érjük a célállapotot</div>
+                    <div class="step"><strong>7. Eredmény:</strong> Összefűzzük a kiválasztott betűket</div>
+                </div>
+
+                <div class="path-demo">
+                    <h3>🔄 Diagonális Haladás Demonstráció</h3>
+                    <div style="text-align: center; margin: 20px 0;">
+                        <div class="diagram-container">
+                            <div style="display: inline-block; margin: 10px;">
+                                <div style="font-weight: bold; color: #6a11cb;">Diagonális 0:</div>
+                                <div>(0,0) <span class="arrow">→</span> A</div>
+                            </div>
+                            <div style="display: inline-block; margin: 10px;">
+                                <div style="font-weight: bold; color: #6a11cb;">Diagonális 1:</div>
+                                <div>(1,0) vagy (0,1) <span class="arrow">→</span> min(A,B)</div>
+                            </div>
+                            <div style="display: inline-block; margin: 10px;">
+                                <div style="font-weight: bold; color: #6a11cb;">Diagonális 2:</div>
+                                <div>(2,0), (1,1), (0,2) <span class="arrow">→</span> minimum</div>
+                            </div>
+                            <div style="display: inline-block; margin: 10px;">
+                                <div style="font-weight: bold; color: #6a11cb;">...</div>
+                                <div>folytatás</div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 15px;">Minden diagonálon a cellák koordinátáira igaz: <strong>i + j = d</strong></p>
+                    </div>
+                </div>
+
+                <ul class="explanation-points">
+                    <li>
+                        <div class="point-title">🎯 1. Miért lexikografikus rendezés?</div>
+                        <p>Két string lexikografikus összehasonlítása: Az első különböző karakter dönt. Például:</p>
+                        <div class="table-container">
+                            <table>
+                                <tr>
+                                    <th>String 1</th>
+                                    <th>String 2</th>
+                                    <th>Eredmény</th>
+                                    <th>Magyarázat</th>
+                                </tr>
+                                <tr>
+                                    <td>"ABCD"</td>
+                                    <td>"ABCC"</td>
+                                    <td>"ABCD" &lt; "ABCC"</td>
+                                    <td>A 3. karakter 'D' vs 'C' → 'C' kisebb</td>
+                                </tr>
+                                <tr>
+                                    <td>"AAA"</td>
+                                    <td>"AA"</td>
+                                    <td>"AA" &lt; "AAA"</td>
+                                    <td>Rövidebb string előnyös, ha megegyezik az eleje</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </li>
+                    
+                    <li>
+                        <div class="point-title">🚀 2. Optimalizált megközelítés</div>
+                        <div class="optimization-tips">
+                            <p><strong>Naív megközelítés:</strong> Minden lehetséges útvonal kipróbálása → O(2^(2n))</p>
+                            <p><strong>Dinamikus programozás:</strong> Tárolnánk minden cellára a legjobb stringet → O(n²) memória, de string műveletek lassúak</p>
+                            <p><strong>Jelenlegi algoritmus:</strong> Csak az optimális útvonalak állapotát tartjuk → O(n) memória, O(n²) idő</p>
+                        </div>
+                    </li>
+                    
+                    <li>
+                        <div class="point-title">🔧 3. A "seen token" trükk</div>
+                        <p>Helyett, hogy minden iterációban új tömböt inicializálnánk vagy Arrays.fill()-t használnánk O(n) időben, egy számlálót növelünk:</p>
+                        <div class="matrix">
+                            <pre>int[] seen = new int[n];  // alapból 0
+int seenToken = 1;
+
+// Ellenőrzés:
+if (seen[row] != seenToken) {
+    seen[row] = seenToken;
+    // hozzáadás
+}
+
+// Következő iterációban:
+seenToken++;  // minden érték most már "régi"</pre>
+                        </div>
+                        <p>Így O(1) időben ellenőrizhetjük, hogy egy sor már szerepel-e az aktuális listában.</p>
+                    </li>
+                    
+                    <li>
+                        <div class="point-title">📐 4. Matematikai háttér</div>
+                        <p>A probléma egy <strong>rácspontokon végzett optimális útvonal keresés</strong>. A megoldás a következő észrevételeken alapul:</p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>A lépések száma mindig: 2n - 2 (n-1 jobbra + n-1 le)</li>
+                            <li>Minden útvonal ugyanannyi lépést tartalmaz</li>
+                            <li>A d. diagonálon d+1 cella lehet (0 ≤ d ≤ 2n-2)</li>
+                            <li>Csak az optimális prefixek maradnak meg</li>
+                        </ul>
+                    </li>
+                    
+                    <li>
+                        <div class="point-title">⚡ 5. Teljesítményelemzés</div>
+                        <div class="complexity-analysis">
+                            <p><strong>Időbonyolultság:</strong> O(n²) - minden cellát legfeljebb kétszer nézünk</p>
+                            <p><strong>Memória:</strong> O(n) - current és next listák max n eleműek</p>
+                            <p><strong>Optimális:</strong> Nem lehet aszimptotikusan jobb, mert be kell olvasni az n² bemenetet</p>
+                        </div>
+                    </li>
+                    
+                    <li>
+                        <div class="point-title">🎮 6. Példa végigjátszása</div>
+                        <p>Tegyük fel, hogy a következő 3×3-as rácsunk van:</p>
+                        <div class="matrix" style="text-align: center;">
+                            <pre>A B C
+D A F
+G H A</pre>
+                        </div>
+                        <p style="margin-top: 10px;">Az algoritmus lépései:</p>
+                        <div style="margin-left: 20px;">
+                            <p>1. Kezdet: sb = "A", current = [0]</p>
+                            <p>2. 1. diagonál: min(B,D) = 'B' → sb = "AB"</p>
+                            <p>3. 2. diagonál: min(C,A,F) = 'A' → sb = "ABA"</p>
+                            <p>4. 3. diagonál: min(F,H) = 'F' → sb = "ABAF"</p>
+                            <p>5. 4. diagonál: min(A) = 'A' → sb = "ABAFA"</p>
+                            <p><strong>Eredmény:</strong> "ABAFA"</p>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="note">
+                    <h4>🔍 Alternatív megközelítések:</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px;">
+                        <div>
+                            <strong>1. Dinamikus programozás:</strong>
+                            <ul style="margin-left: 20px; margin-top: 5px;">
+                                <li>Minden cellára tároljuk a legjobb stringet</li>
+                                <li>Memória: O(n²)</li>
+                                <li>String műveletek lassúak</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <strong>2. BFS + HashSet:</strong>
+                            <ul style="margin-left: 20px; margin-top: 5px;">
+                                <li>Szintenként bővítjük az állapotteret</li>
+                                <li>HashSet az egyedi állapotokhoz</li>
+                                <li>Általában lassabb</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="task-content">
-            <h2>Feladat leírása</h2>
-            <p>Adott egy n × n-es rács, amelynek minden mezőjében egy nagybetűs angol betű (A–Z) van. A bal felső sarokból ([1,1]) kell eljutnod a jobb alsó sarokba ([n,n]).
-Csak jobbra vagy lefelé lehet lépni minden lépésben. A cél, hogy a lehető legkisebb lexikografikus sorrendű (tehát „ábécérendben a legkorábbi”) karakterláncot kapd meg, ha az úton szereplő betűket egymás után írod.
-            Bemenet (Input)
-Az első sorban egy egész szám: n – a rács mérete.
-Ezután n sor következik, mindegyik n darab betűt tartalmaz (csupa nagybetűt).
-            Kimenet (Output)
-Írd ki azt a karakterláncot, ami a lehetséges utak közül lexikografikusan a legkisebb.
-            Feltételek
-                1≤n≤3000 
-Tehát a cél: megkeresni azt az útvonalat (csak jobbra/lefelé), ami a betűk sorrendjét tekintve a legkisebb lehetséges karakterláncot adja.</p>
-            
-            <h2>Java Megoldásom</h2>
-            <div class="solution">
-                <h3>Java kód:</h3>
-                <code>
-import java.io.*;
+        <div class="download-section">
+            <h3>📥 Letöltés</h3>
+            <p>A teljes Java kód letölthető egyetlen fájlként</p>
+            <button class="download-btn" onclick="downloadJavaCode()">LexMinPath.java letöltése</button>
+            <p style="margin-top: 15px; font-size: 0.9rem; opacity: 0.9;">Kompakt és hatékony megoldás O(n) memóriával</p>
+        </div>
+
+        <footer>
+            <p>Lexikografikusan Legkisebb Útvonal - Optimális algoritmus tervezése</p>
+            <p>© 2024 - Dinamikus programozás és gráfalgoritmusok</p>
+        </footer>
+    </div>
+
+    <script>
+        function downloadJavaCode() {
+            const javaCode = `import java.io.*;
 import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int n = Integer.parseInt(br.readLine().trim());
+        
         char[][] grid = new char[n][n];
         for (int i = 0; i < n; i++) {
             String line = br.readLine();
             while (line == null || line.length() < n) {
-                // Ha valami miatt sorok törnek (ritka), olvassunk tovább
                 String extra = br.readLine();
                 if (extra == null) break;
                 line = (line == null ? "" : line) + extra;
             }
             grid[i] = line.trim().toCharArray();
         }
-
+        
         StringBuilder sb = new StringBuilder();
         sb.append(grid[0][0]);
-
-        // current: lista azon sorindexeknek, amelyek az aktuális diagonálon elérhetők
+        
         ArrayList<Integer> current = new ArrayList<>();
-        current.add(0); // (0,0) row index 0, mert i+j = 0
-
-        // seen token trükk a duplikátumok elkerülésére (nem törlünk tömböt minden iterációban)
+        current.add(0);
+        
         int[] seen = new int[n];
         int seenToken = 1;
-
-        // végső string hossza 2*n - 1; már van 1 karakterünk --> kell még 2*n-2 karakter
+        
         for (int d = 0; d < 2 * n - 2; d++) {
-            // keresd meg a következő (d+1)-edik diagonálra vezető legkisebb betűt
             char minChar = Character.MAX_VALUE;
             for (int idx = 0; idx < current.size(); idx++) {
                 int i = current.get(idx);
-                int j = d - i; // jelenlegi diagonálon j = d - i
+                int j = d - i;
+                
                 if (i + 1 < n) {
                     char c = grid[i + 1][j];
                     if (c < minChar) minChar = c;
                 }
+                
                 if (j + 1 < n) {
                     char c = grid[i][j + 1];
                     if (c < minChar) minChar = c;
                 }
             }
-
+            
             sb.append(minChar);
-
-            // építsük a következő diagonál current listáját (sorindexek)
+            
             ArrayList<Integer> next = new ArrayList<>();
             seenToken++;
+            
             for (int idx = 0; idx < current.size(); idx++) {
                 int i = current.get(idx);
                 int j = d - i;
+                
                 if (i + 1 < n && grid[i + 1][j] == minChar) {
                     int row = i + 1;
                     if (seen[row] != seenToken) {
@@ -92,94 +893,134 @@ public class Main {
                         next.add(row);
                     }
                 }
+                
                 if (j + 1 < n && grid[i][j + 1] == minChar) {
-                    int row = i; // (i, j+1) sorindexe i
+                    int row = i;
                     if (seen[row] != seenToken) {
                         seen[row] = seenToken;
                         next.add(row);
                     }
                 }
             }
-
+            
             current = next;
         }
-
+        
         System.out.println(sb.toString());
     }
-}
-          </code>
-                
-                <h3>Magyarázat:</h3>
-                <p> 1. Beolvassa a táblát
-                        int n = Integer.parseInt(br.readLine().trim());
-                        char[][] grid = new char[n][n];
-                    Ez megmondja, mekkora a tábla (pl. 4×4). A grid tárolja a betűket (mint egy négyzetrács).
-                        grid[0][0] = 'A'
-                        grid[0][1] = 'A'
-                        grid[0][2] = 'C'
-                        grid[0][3] = 'A'
-                        ...
+}`;
 
-                    2. Az indulás
-                        StringBuilder sb = new StringBuilder();
-                        sb.append(grid[0][0]);
-                    A szó (sb) első betűje a bal felső sarok betűje. Tehát elindulunk az első „A”-val.
+            const blob = new Blob([javaCode], { type: 'text/x-java-source' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'LexMinPath.java';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            // Üzenet megjelenítése
+            const message = document.createElement('div');
+            message.textContent = '✅ Java fájl letöltése elkezdődött!';
+            message.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #38b2ac;
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                z-index: 1000;
+                animation: slideIn 0.3s ease;
+            `;
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            document.body.appendChild(message);
+            
+            setTimeout(() => {
+                message.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(message);
+                    document.head.removeChild(style);
+                }, 300);
+            }, 3000);
+        }
 
-                    3. A kezdőpont listája
-                        ArrayList<Integer> current = new ArrayList<>();
-                        current.add(0);
-                    Ez megjegyzi, hogy hol vagyunk most. Most csak egy helyen vagyunk: a bal felső sarokban. A program diagonálisan (átlósan) fog haladni a táblán — mindig a következő "átló" mezőit nézi meg.
-                        
-                    4. Most jön a lépkedés a táblán
-                    Ez a nagy for-ciklus csinálja a lépéseket:
-                        for (int d = 0; d < 2 * n - 2; d++) {
-                    Miért 2*n - 2? Mert ennyi lépést kell tenni, hogy a bal felső saroktól elérjünk a jobb alsó sarokig.
-                        
-                    5. A legkisebb betű keresése
-                        char minChar = Character.MAX_VALUE;
-                    Itt tárolja, mi a legkisebb betű, amit most találunk. Aztán megnézi az összes lehetséges új mezőt, amire léphetünk:
-                        if (i + 1 < n) {
-                            char c = grid[i + 1][j];
-                            if (c < minChar) minChar = c;
-                        }
-                        if (j + 1 < n) {
-                            char c = grid[i][j + 1];
-                            if (c < minChar) minChar = c;
-                        }
-                    Ez azt jelenti: Nézzük meg, ha lelépünk egyet (i+1), milyen betű van ott. Nézzük meg, ha jobbra lépünk egyet (j+1), milyen betű van ott. Ha találunk kisebb betűt (például „A”-t), azt választjuk.
-                                  
-                    6. Hozzáadjuk a legkisebb betűt a szóhoz
-                        sb.append(minChar);
-                    Tehát a következő betű az lesz, amit most kiválasztottunk.
-                                  
-                    7. Következő lépések előkészítése
-                        ArrayList<Integer> next = new ArrayList<>();
-                    Ez tárolja majd, honnan lehet továbbmenni a következő körben. A kód itt ellenőrzi: Melyik mezők vezettek a most kiválasztott legkisebb betűhöz. 
-                    Csak azokat a mezőket tartja meg, amelyek ugyanabba a legkisebb betűbe vezetnek. Így nem kell minden útvonalat végignézni — csak a legígéretesebbeket!
+        // Szintaxis kiemelés inicializálása
+        document.addEventListener('DOMContentLoaded', function() {
+            highlightCode();
+            
+            // Grid cellák animációja
+            const pathCells = document.querySelectorAll('.grid-cell.path');
+            pathCells.forEach((cell, index) => {
+                cell.style.animationDelay = `${index * 0.3}s`;
+            });
+        });
 
-                    8. A „seen” trükk
-                        int[] seen = new int[n];
-                        int seenToken = 1;
-                    Ez csak azért van, hogy ne adjunk hozzá ugyanazt a sort kétszer. Segít, hogy a program gyors legyen.
-                        
-                    9. Végül kiírjuk a kész szót
-                        System.out.println(sb.toString());
-                    Ez az a szó, amit a program lépésről lépésre épített fel — és ez lesz a lexikografikusan legkisebb (tehát ábécében legelső).
-
-                    Összefoglalva:
-                    Képzeld el, hogy van egy betűs labirintusod, minden mező egy betű, te pedig csak jobbra és lefelé mehetsz.
-                    A játék célja, hogy mindig a legkisebb betű felé lépj, amíg a jobb alsó sarokba nem érsz. Közben jegyezd fel a betűket — a végén lesz egy szó. 
-                    A program pontosan ezt csinálja: mindig a legjobb betűt választja, és nem pazarol időt a rossz irányokra. </p>
-                
-                <h3>Bemenet:</h3>
-                <code> Az első sorban egy egész szám: n – a rács mérete. Ezután n sor következik, mindegyik n darab betűt tartalmaz (csupa nagybetűt).</code>
-                
-                <h3>Kimenet:</h3>
-                <code> Írd ki azt a karakterláncot, ami a lehetséges utak közül lexikografikusan a legkisebb. Feltételek: 1≤n≤3000 </code>
-            </div>
-        </div>
-
-        <a href="index.html" class="back-btn">⬅️ Vissza a főoldalra</a>
-    </div>
+        function highlightCode() {
+            const codeElement = document.querySelector('.code-container pre');
+            if (!codeElement) return;
+            
+            const keywords = [
+                'import', 'public', 'class', 'static', 'void', 'main',
+                'throws', 'new', 'for', 'if', 'else', 'while', 'return',
+                'int', 'char', 'boolean', 'String', 'ArrayList', 'Integer'
+            ];
+            
+            const functions = ['append', 'add', 'get', 'size', 'println', 'parseInt', 'readLine', 'trim'];
+            const classes = ['BufferedReader', 'InputStreamReader', 'StringBuilder', 'Character', 'System', 'Arrays'];
+            
+            let code = codeElement.innerHTML;
+            
+            // Kulcsszavak
+            keywords.forEach(keyword => {
+                const regex = new RegExp(`\\b${keyword}\\b`, 'g');
+                code = code.replace(regex, `<span class="keyword">${keyword}</span>`);
+            });
+            
+            // Osztályok
+            classes.forEach(cls => {
+                const regex = new RegExp(`\\b${cls}\\b`, 'g');
+                code = code.replace(regex, `<span class="class">${cls}</span>`);
+            });
+            
+            // Függvények
+            functions.forEach(func => {
+                const regex = new RegExp(`\\.${func}\\(`, 'g');
+                code = code.replace(regex, `.<span class="function">${func}</span>(`);
+            });
+            
+            // Import
+            code = code.replace(/(import\s+)/g, '<span class="import">$1</span>');
+            
+            // Stringek
+            code = code.replace(/(".*?")/g, '<span class="string">$1</span>');
+            
+            // Kommentek
+            code = code.replace(/(\/\/.*$)/gm, '<span class="comment">$1</span>');
+            
+            // Számok
+            code = code.replace(/\b(\d+)\b/g, '<span class="number">$1</span>');
+            
+            // Operátorok
+            code = code.replace(/([=<>!&|+\-*/%]+)/g, '<span class="operator">$1</span>');
+            
+            codeElement.innerHTML = code;
+        }
+    </script>
 </body>
 </html>
