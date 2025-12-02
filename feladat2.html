@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lovasjárás (Knight's Tour)</title>
+    <title>Lovasjárás (Knight's Tour) - Python Kóddal</title>
     <style>
         * {
             margin: 0;
@@ -12,116 +12,235 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: #fff;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            color: #e0e0e0;
             min-height: 100vh;
             padding: 20px;
+            line-height: 1.6;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
         }
 
         header {
             text-align: center;
-            margin-bottom: 40px;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.1);
+            margin-bottom: 30px;
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.4);
             border-radius: 15px;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(100, 150, 200, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
         h1 {
             font-size: 2.8rem;
             margin-bottom: 10px;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            background: linear-gradient(45deg, #00b4db, #0083b0);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        h1::before {
+            content: "♞ ";
+            color: #00b4db;
         }
 
         .subtitle {
-            font-size: 1.2rem;
-            color: #aaa;
-            margin-bottom: 20px;
+            font-size: 1.1rem;
+            color: #88c0d0;
+            margin-bottom: 15px;
+            font-style: italic;
         }
 
-        .main-content {
+        .main-layout {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 30px;
             margin-bottom: 40px;
         }
 
-        @media (max-width: 768px) {
-            .main-content {
+        @media (max-width: 1200px) {
+            .main-layout {
                 grid-template-columns: 1fr;
             }
         }
 
-        .input-section {
-            background: rgba(255, 255, 255, 0.08);
-            padding: 25px;
+        .code-section {
+            background: rgba(0, 20, 40, 0.8);
             border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(100, 150, 200, 0.2);
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
-        .board-section {
-            background: rgba(255, 255, 255, 0.08);
-            padding: 25px;
-            border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .code-header {
+            background: linear-gradient(90deg, #1a2a3a, #2a3a4a);
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(100, 150, 200, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        h2 {
-            font-size: 1.8rem;
+        .code-header h2 {
+            color: #88c0d0;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .code-header h2::before {
+            content: "🐍";
+            font-size: 1.2rem;
+        }
+
+        .language-tabs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .tab-btn {
+            padding: 8px 16px;
+            background: rgba(100, 150, 200, 0.2);
+            border: 1px solid rgba(100, 150, 200, 0.3);
+            color: #88c0d0;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(90deg, #0083b0, #00b4db);
+            color: white;
+            border-color: #00b4db;
+        }
+
+        .tab-btn:hover {
+            background: rgba(100, 150, 200, 0.3);
+        }
+
+        .code-container {
+            padding: 0;
+            max-height: 700px;
+            overflow-y: auto;
+        }
+
+        pre {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            tab-size: 4;
+        }
+
+        code {
+            color: #f8f8f2;
+        }
+
+        .keyword { color: #ff79c6; }
+        .function { color: #50fa7b; }
+        .string { color: #f1fa8c; }
+        .comment { color: #6272a4; }
+        .number { color: #bd93f9; }
+        .operator { color: #ff79c6; }
+        .builtin { color: #8be9fd; }
+        .class-name { color: #50fa7b; }
+
+        .game-section {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .input-panel {
+            background: rgba(0, 20, 40, 0.8);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(100, 150, 200, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .input-panel h2 {
+            color: #88c0d0;
             margin-bottom: 20px;
-            color: #4ecdc4;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-panel h2::before {
+            content: "⚙️";
         }
 
         .input-group {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .input-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .coord-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         label {
-            display: block;
-            margin-bottom: 8px;
-            color: #aaa;
+            color: #88c0d0;
             font-weight: 500;
+            min-width: 120px;
         }
 
         input[type="number"] {
-            width: 100%;
-            padding: 12px;
+            flex: 1;
+            padding: 12px 15px;
             background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(100, 150, 200, 0.3);
             border-radius: 8px;
             color: white;
             font-size: 1rem;
+            font-family: 'Consolas', monospace;
             transition: all 0.3s ease;
         }
 
         input[type="number"]:focus {
             outline: none;
-            border-color: #4ecdc4;
-            box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.2);
+            border-color: #00b4db;
+            box-shadow: 0 0 0 3px rgba(0, 180, 219, 0.2);
+            background: rgba(255, 255, 255, 0.15);
         }
 
-        .button-group {
+        .control-buttons {
             display: flex;
             gap: 15px;
+            margin-top: 25px;
             flex-wrap: wrap;
         }
 
         button {
             padding: 14px 28px;
-            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
-            color: white;
             border: none;
             border-radius: 8px;
             cursor: pointer;
@@ -129,42 +248,114 @@
             font-weight: 600;
             transition: all 0.3s ease;
             flex: 1;
-            min-width: 150px;
+            min-width: 160px;
+            font-family: 'Consolas', monospace;
+            letter-spacing: 0.5px;
         }
 
-        button:hover {
+        .btn-solve {
+            background: linear-gradient(45deg, #00b4db, #0083b0);
+            color: white;
+        }
+
+        .btn-solve:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+            box-shadow: 0 5px 20px rgba(0, 180, 219, 0.4);
+            background: linear-gradient(45deg, #00c8ff, #0099cc);
         }
 
-        button:active {
-            transform: translateY(0);
+        .btn-reset {
+            background: linear-gradient(45deg, #8a2be2, #4b0082);
+            color: white;
         }
 
-        button.solve {
-            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+        .btn-reset:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(138, 43, 226, 0.4);
+            background: linear-gradient(45deg, #9b30ff, #5a00a8);
         }
 
-        button.solve:hover {
-            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
+        .btn-copy {
+            background: linear-gradient(45deg, #ff8c00, #ff4500);
+            color: white;
         }
 
-        button.reset {
-            background: linear-gradient(45deg, #4776E6, #8E54E9);
+        .btn-copy:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 140, 0, 0.4);
+            background: linear-gradient(45deg, #ffa500, #ff5500);
         }
 
-        button.reset:hover {
-            box-shadow: 0 5px 15px rgba(142, 84, 233, 0.4);
+        .stats-panel {
+            background: rgba(0, 20, 40, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(100, 150, 200, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: rgba(0, 30, 60, 0.5);
+            border-radius: 10px;
+            border: 1px solid rgba(100, 150, 200, 0.2);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #00b4db;
+            margin-bottom: 5px;
+            font-family: 'Consolas', monospace;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #88c0d0;
+        }
+
+        .chessboard-container {
+            background: rgba(0, 20, 40, 0.8);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(100, 150, 200, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .chessboard-container h2 {
+            color: #88c0d0;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chessboard-container h2::before {
+            content: "♜";
         }
 
         .chessboard {
             display: grid;
             grid-template-columns: repeat(8, 1fr);
             gap: 2px;
-            background: #333;
-            padding: 10px;
-            border-radius: 8px;
-            border: 3px solid #555;
+            background: #1a2a3a;
+            padding: 15px;
+            border-radius: 10px;
+            border: 3px solid #2a3a4a;
             max-width: 500px;
             margin: 0 auto;
         }
@@ -178,6 +369,8 @@
             font-size: 0.9rem;
             position: relative;
             transition: all 0.3s ease;
+            cursor: pointer;
+            font-family: 'Consolas', monospace;
         }
 
         .cell.light {
@@ -191,594 +384,440 @@
         }
 
         .cell.start {
-            background: linear-gradient(45deg, #ff6b6b, #ff8e53) !important;
+            background: linear-gradient(45deg, #00b4db, #0083b0) !important;
             color: white;
             font-weight: bold;
+            box-shadow: 0 0 10px rgba(0, 180, 219, 0.7);
         }
 
         .cell.visited {
-            animation: pulse 0.5s ease;
+            animation: visited-pulse 0.5s ease;
         }
 
-        @keyframes pulse {
+        @keyframes visited-pulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
 
-        .cell-number {
-            font-size: 0.8rem;
-            font-weight: bold;
+        .cell:hover {
+            filter: brightness(1.2);
+            transform: scale(1.05);
+            z-index: 2;
         }
 
-        .coordinates {
+        .cell-number {
+            font-size: 0.85rem;
+            font-weight: bold;
+            z-index: 1;
+        }
+
+        .cell-coords {
             position: absolute;
             font-size: 0.6rem;
-            opacity: 0.6;
-            top: 2px;
-            left: 2px;
+            opacity: 0.7;
+            top: 3px;
+            left: 3px;
+            font-weight: normal;
         }
 
         .solution-section {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(0, 20, 40, 0.8);
             padding: 25px;
             border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(100, 150, 200, 0.2);
             margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .solution-section h2 {
+            color: #88c0d0;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .solution-section h2::before {
+            content: "📋";
         }
 
         .solution-grid {
             display: grid;
             grid-template-columns: repeat(8, 1fr);
-            gap: 1px;
-            background: #222;
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 20px;
-            font-family: monospace;
+            gap: 2px;
+            background: #1a2a3a;
+            padding: 15px;
+            border-radius: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+            font-family: 'Consolas', monospace;
         }
 
         .solution-cell {
-            padding: 10px;
+            padding: 12px;
             text-align: center;
-            background: #333;
-            color: white;
+            background: #2a3a4a;
+            color: #88c0d0;
             font-weight: bold;
             min-height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 0.9rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
         }
 
-        .info-section {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 40px;
-        }
-
-        .info-card {
-            background: rgba(255, 255, 255, 0.08);
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .info-card h3 {
-            color: #4ecdc4;
-            margin-bottom: 15px;
-            font-size: 1.3rem;
-        }
-
-        .info-card p {
-            color: #ccc;
-            line-height: 1.6;
-        }
-
-        .knight-icon {
-            font-size: 2rem;
-            margin-right: 10px;
+        .solution-cell:hover {
+            transform: scale(1.05);
+            background: #3a4a5a;
         }
 
         .loading {
             display: none;
             text-align: center;
-            padding: 20px;
+            padding: 30px;
+            background: rgba(0, 20, 40, 0.9);
+            border-radius: 10px;
+            margin-top: 20px;
         }
 
         .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(255, 255, 255, 0.3);
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(0, 180, 219, 0.3);
             border-radius: 50%;
-            border-top-color: #4ecdc4;
-            animation: spin 1s ease-in-out infinite;
-            margin: 0 auto 10px;
+            border-top-color: #00b4db;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
         }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
 
-        .path-line {
+        .code-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .code-link {
+            padding: 10px 20px;
+            background: rgba(0, 180, 219, 0.2);
+            border: 1px solid rgba(0, 180, 219, 0.4);
+            color: #88c0d0;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .code-link:hover {
+            background: rgba(0, 180, 219, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 180, 219, 0.3);
+        }
+
+        .github-corner {
+            position: fixed;
+            top: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .github-corner svg {
+            fill: #00b4db;
+            color: #0f2027;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: 300px;
+            background-color: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
             position: absolute;
-            background: rgba(255, 107, 107, 0.5);
-            pointer-events: none;
-            z-index: 1;
+            z-index: 1000;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            border: 1px solid #00b4db;
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
         }
 
         .algorithm-info {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-            border-left: 4px solid #4ecdc4;
-        }
-
-        .step-counter {
-            text-align: center;
-            font-size: 1.2rem;
-            margin: 20px 0;
-            color: #4ecdc4;
-        }
-
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(0, 30, 60, 0.7);
+            padding: 20px;
             border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid #00b4db;
         }
 
-        .stat-item {
-            text-align: center;
+        .algorithm-info h3 {
+            color: #00b4db;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #ff6b6b;
+        .algorithm-info h3::before {
+            content: "🔍";
         }
 
-        .stat-label {
-            font-size: 0.9rem;
-            color: #aaa;
+        .code-explanation {
+            background: rgba(0, 20, 40, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 1px solid rgba(100, 150, 200, 0.2);
+        }
+
+        .code-explanation h4 {
+            color: #88c0d0;
+            margin-bottom: 10px;
+        }
+
+        .explanation-list {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+
+        .explanation-list li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .explanation-list li::before {
+            content: "▶";
+            color: #00b4db;
+            position: absolute;
+            left: 0;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 20, 40, 0.5);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #00b4db, #0083b0);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(45deg, #00c8ff, #0099cc);
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>♞ Lovasjárás (Knight's Tour)</h1>
-            <div class="subtitle">8×8-as sakktáblán – a ló minden mezőt pontosan egyszer érint</div>
+            <h1>Knight's Tour - Python Megoldás</h1>
+            <div class="subtitle">8×8-as sakktáblán – a ló teljes körbejárása Warnsdorff algoritmussal</div>
+            <div class="tooltip" style="display: inline-block; margin-top: 10px;">
+                ℹ️ Hogyan működik?
+                <div class="tooltip-text">
+                    A program Pythonban implementálja a Knight's Tour problémát. A Warnsdorff algoritmus mindig azt a következő mezőt választja, amelyből a legkevesebb további lépés lehetséges. A kód látható a jobb oldalon.
+                </div>
+            </div>
         </header>
 
-        <div class="main-content">
-            <div class="input-section">
-                <h2>📊 Kezdőpozíció beállítása</h2>
-                <div class="input-group">
-                    <label for="startX">X koordináta (1-8):</label>
-                    <input type="number" id="startX" min="1" max="8" value="2" placeholder="Például: 2">
-                </div>
-                <div class="input-group">
-                    <label for="startY">Y koordináta (1-8):</label>
-                    <input type="number" id="startY" min="1" max="8" value="1" placeholder="Például: 1">
-                </div>
-                
-                <div class="algorithm-info">
-                    <h3>⚙️ Warnsdorff algoritmus</h3>
-                    <p>Mindig azt a mezőt választja, amelyből a legkevesebb további lépés lehetséges. Ez növeli a teljes kör bejárás sikerességét.</p>
-                </div>
-
-                <div class="button-group">
-                    <button class="solve" onclick="solveTour()">Megoldás keresése</button>
-                    <button class="reset" onclick="resetBoard()">Tábla törlése</button>
-                </div>
-
-                <div class="step-counter" id="stepCounter">
-                    Lépések: 0/64
-                </div>
-
-                <div class="stats">
-                    <div class="stat-item">
-                        <div class="stat-value" id="timeStat">0s</div>
-                        <div class="stat-label">Futási idő</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="backtracks">0</div>
-                        <div class="stat-label">Visszalépések</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="attempts">1</div>
-                        <div class="stat-label">Próbálkozások</div>
+        <div class="main-layout">
+            <!-- Python kód szekció -->
+            <div class="code-section">
+                <div class="code-header">
+                    <h2>Python Implementáció</h2>
+                    <div class="language-tabs">
+                        <button class="tab-btn active" onclick="showCode('python')">Python</button>
+                        <button class="tab-btn" onclick="showCode('java')">Java</button>
                     </div>
                 </div>
+                <div class="code-container">
+                    <!-- Python kód -->
+                    <pre id="python-code" style="display: block;"><code><span class="comment">#!/usr/bin/env python3</span>
+<span class="comment"># Knight's Tour - Warnsdorff algoritmus Python implementációja</span>
+<span class="comment"># Készítve: 2024.01.15</span>
 
-                <div class="loading" id="loading">
-                    <div class="spinner"></div>
-                    <p>Megoldás keresése folyamatban...</p>
+<span class="keyword">import</span> sys
+sys.setrecursionlimit(<span class="number">10000</span>)
+
+<span class="comment"># A ló lehetséges lépései (L-alakban)</span>
+<span class="function">moves</span> = [(<span class="number">2</span>, <span class="number">1</span>), (<span class="number">1</span>, <span class="number">2</span>), (<span class="operator">-</span><span class="number">1</span>, <span class="number">2</span>), (<span class="operator">-</span><span class="number">2</span>, <span class="number">1</span>),
+         (<span class="operator">-</span><span class="number">2</span>, <span class="operator">-</span><span class="number">1</span>), (<span class="operator">-</span><span class="number">1</span>, <span class="operator">-</span><span class="number">2</span>), (<span class="number">1</span>, <span class="operator">-</span><span class="number">2</span>), (<span class="number">2</span>, <span class="operator">-</span><span class="number">1</span>)]
+
+<span class="keyword">def</span> <span class="function">is_valid</span>(x, y, board):
+    <span class="string">"""Ellenőrzi, hogy a lépés érvényes-e"""</span>
+    <span class="keyword">return</span> <span class="number">1</span> &lt;= x &lt;= <span class="number">8</span> <span class="keyword">and</span> <span class="number">1</span> &lt;= y &lt;= <span class="number">8</span> <span class="keyword">and</span> board[x][y] == <span class="number">0</span>
+
+<span class="keyword">def</span> <span class="function">get_valid_moves</span>(x, y, board):
+    <span class="string">"""Visszaadja az összes érvényes lépést"""</span>
+    valid_moves = []
+    <span class="keyword">for</span> dx, dy <span class="keyword">in</span> moves:
+        nx, ny = x + dx, y + dy
+        <span class="keyword">if</span> is_valid(nx, ny, board):
+            valid_moves.append((nx, ny))
+    <span class="keyword">return</span> valid_moves
+
+<span class="keyword">def</span> <span class="function">warnsdorff_order</span>(x, y, board):
+    <span class="string">"""Warnsdorff szabály: a legkevesebb lehetőséget adó lépés először"""</span>
+    valid_moves = get_valid_moves(x, y, board)
+    moves_with_degree = []
+    
+    <span class="keyword">for</span> nx, ny <span class="keyword">in</span> valid_moves:
+        degree = len(get_valid_moves(nx, ny, board))
+        moves_with_degree.append((degree, nx, ny))
+    
+    <span class="comment"># Rendezés a legkisebb fokszám szerint</span>
+    moves_with_degree.sort(key=<span class="keyword">lambda</span> x: x[<span class="number">0</span>])
+    
+    <span class="keyword">return</span> [(nx, ny) <span class="keyword">for</span> (degree, nx, ny) <span class="keyword">in</span> moves_with_degree]
+
+<span class="keyword">def</span> <span class="function">solve_knights_tour</span>(x, y, move_count, board):
+    <span class="string">"""Rekurzív megoldó algoritmus backtracking-el"""</span>
+    <span class="keyword">if</span> move_count == <span class="number">64</span>:
+        <span class="keyword">return</span> <span class="builtin">True</span>
+    
+    next_moves = warnsdorff_order(x, y, board)
+    
+    <span class="keyword">for</span> nx, ny <span class="keyword">in</span> next_moves:
+        board[nx][ny] = move_count + <span class="number">1</span>
+        
+        <span class="keyword">if</span> solve_knights_tour(nx, ny, move_count + <span class="number">1</span>, board):
+            <span class="keyword">return</span> <span class="builtin">True</span>
+        
+        <span class="comment"># Backtracking - visszalépés</span>
+        board[nx][ny] = <span class="number">0</span>
+    
+    <span class="keyword">return</span> <span class="builtin">False</span>
+
+<span class="keyword">def</span> <span class="function">print_board</span>(board):
+    <span class="string">"""Kiírja a sakktáblát"""</span>
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="function">range</span>(<span class="number">1</span>, <span class="number">9</span>):
+        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="function">range</span>(<span class="number">1</span>, <span class="number">9</span>):
+            <span class="builtin">print</span>(<span class="builtin">str</span>(board[i][j]).rjust(<span class="number">3</span>), end=<span class="string">" "</span>)
+        <span class="builtin">print</span>()
+
+<span class="keyword">def</span> <span class="function">main</span>():
+    <span class="string">"""Főprogram"""</span>
+    <span class="keyword">try</span>:
+        <span class="comment"># Bemenet beolvasása</span>
+        input_str = <span class="builtin">input</span>().strip()
+        <span class="keyword">if</span> <span class="keyword">not</span> input_str:
+            <span class="keyword">return</span>
+        
+        x, y = <span class="builtin">map</span>(<span class="builtin">int</span>, input_str.split())
+        
+        <span class="comment"># Sakktábla inicializálása</span>
+        board = [[<span class="number">0</span> <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="function">range</span>(<span class="number">9</span>)] <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="function">range</span>(<span class="number">9</span>)]
+        
+        <span class="comment"># Kezdőpozíció beállítása</span>
+        board[y][x] = <span class="number">1</span>
+        
+        <span class="builtin">print</span>(<span class="string">f"Kezdő pozíció: x={x}, y={y}"</span>)
+        <span class="builtin">print</span>(<span class="string">"Megoldás keresése..."</span>)
+        
+        <span class="comment"># Megoldás keresése</span>
+        <span class="keyword">if</span> solve_knights_tour(y, x, <span class="number">1</span>, board):
+            <span class="builtin">print</span>(<span class="string">"\nMegoldás megtalálva!"</span>)
+            <span class="builtin">print</span>(<span class="string">"="</span> * <span class="number">50</span>)
+            print_board(board)
+        <span class="keyword">else</span>:
+            <span class="builtin">print</span>(<span class="string">"Nem található teljes kör!"</span>)
+            
+    <span class="keyword">except</span> <span class="class-name">Exception</span> <span class="keyword">as</span> e:
+        <span class="builtin">print</span>(<span class="string">f"Hiba történt: {e}"</span>)
+
+<span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:
+    main()</code></pre>
+
+                    <!-- Java kód -->
+                    <pre id="java-code" style="display: none;"><code><span class="keyword">import</span> java.util.*;
+
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="class-name">KnightTour</span> {
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="builtin">int</span>[][] MOVES = {
+        {<span class="number">2</span>, <span class="number">1</span>}, {<span class="number">1</span>, <span class="number">2</span>}, {<span class="operator">-</span><span class="number">1</span>, <span class="number">2</span>}, {<span class="operator">-</span><span class="number">2</span>, <span class="number">1</span>},
+        {<span class="operator">-</span><span class="number">2</span>, <span class="operator">-</span><span class="number">1</span>}, {<span class="operator">-</span><span class="number">1</span>, <span class="operator">-</span><span class="number">2</span>}, {<span class="number">1</span>, <span class="operator">-</span><span class="number">2</span>}, {<span class="number">2</span>, <span class="operator">-</span><span class="number">1</span>}
+    };
+    
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="builtin">int</span>[][] board;
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="builtin">int</span> size = <span class="number">8</span>;
+    
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="builtin">void</span> main(String[] args) {
+        Scanner sc = <span class="keyword">new</span> Scanner(System.in);
+        <span class="builtin">int</span> startX = sc.nextInt() - <span class="number">1</span>;
+        <span class="builtin">int</span> startY = sc.nextInt() - <span class="number">1</span>;
+        
+        board = <span class="keyword">new</span> <span class="builtin">int</span>[size][size];
+        board[startY][startX] = <span class="number">1</span>;
+        
+        <span class="keyword">if</span> (solveKnightTour(startX, startY, <span class="number">2</span>)) {
+            printSolution();
+        }
+    }
+    
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="builtin">boolean</span> solveKnightTour(<span class="builtin">int</span> x, <span class="builtin">int</span> y, <span class="builtin">int</span> moveNum) {
+        <span class="keyword">if</span> (moveNum > size * size) <span class="keyword">return</span> <span class="builtin">true</span>;
+        
+        List<<span class="builtin">int</span>[]> candidates = <span class="keyword">new</span> ArrayList<>();
+        
+        <span class="keyword">for</span> (<span class="builtin">int</span>[] move : MOVES) {
+            <span class="builtin">int</span> nx = x + move[<span class="number">0</span>];
+            <span class="builtin">int</span> ny = y + move[<span class="number">1</span>];
+            
+            <span class="keyword">if</span> (isValid(nx, ny)) {
+                <span class="builtin">int</span> degree = countAccessible(nx, ny);
+                candidates.add(<span class="keyword">new</span> <span class="builtin">int</span>[]{nx, ny, degree});
+            }
+        }
+        
+        candidates.sort(Comparator.comparingInt(a -> a[<span class="number">2</span>]));
+        
+        <span class="keyword">for</span> (<span class="builtin">int</span>[] cand : candidates) {
+            <span class="builtin">int</span> nx = cand[<span class="number">0</span>];
+            <span class="builtin">int</span> ny = cand[<span class="number">1</span>];
+            
+            board[ny][nx] = moveNum;
+            <span class="keyword">if</span> (solveKnightTour(nx, ny, moveNum + <span class="number">1</span>)) {
+                <span class="keyword">return</span> <span class="builtin">true</span>;
+            }
+            board[ny][nx] = <span class="number">0</span>;
+        }
+        
+        <span class="keyword">return</span> <span class="builtin">false</span>;
+    }
+}</code></pre>
                 </div>
-            </div>
 
-            <div class="board-section">
-                <h2>♜ Sakktábla</h2>
-                <div id="chessboard" class="chessboard"></div>
-                <div style="text-align: center; margin-top: 20px; color: #aaa;">
-                    Zöld: kezdőpozíció | Számok: lépések sorrendje
-                </div>
-            </div>
-        </div>
-
-        <div class="solution-section">
-            <h2>📋 Megoldás mátrixa</h2>
-            <div id="solutionGrid" class="solution-grid"></div>
-            <div style="margin-top: 20px; color: #ccc;">
-                <p>A mátrix minden cellája azt mutatja, hányadik lépésben ért a ló az adott mezőre.</p>
-            </div>
-        </div>
-
-        <div class="info-section">
-            <div class="info-card">
-                <h3>🎯 A probléma</h3>
-                <p>A lovasjárás (Knight's Tour) egy matematikai probléma, ahol a sakk lójával egy 8×8-as táblán kell minden mezőt pontosan egyszer érinteni.</p>
-            </div>
-            <div class="info-card">
-                <h3>🏇 A ló lépései</h3>
-                <p>A ló "L" alakban mozog: 2 mezőt egy irányba és 1 mezőt a merőleges irányba. Összesen 8 lehetséges lépése van.</p>
-            </div>
-            <div class="info-card">
-                <h3>⚡ Algoritmus</h3>
-                <p>A program Warnsdorff szabályt alkalmaz: mindig azt a következő mezőt választja, amelyből a legkevesebb további lépés lehetséges.</p>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const boardSize = 8;
-        let board = [];
-        let solutionMatrix = [];
-        let startTime;
-        let backtracks = 0;
-        let attempts = 1;
-
-        // Ló lehetséges lépései
-        const knightMoves = [
-            [2, 1], [1, 2], [-1, 2], [-2, 1],
-            [-2, -1], [-1, -2], [1, -2], [2, -1]
-        ];
-
-        // Inicializálás
-        function init() {
-            createBoard();
-            createSolutionGrid();
-            updateDisplay();
-        }
-
-        // Sakktábla létrehozása
-        function createBoard() {
-            const chessboard = document.getElementById('chessboard');
-            chessboard.innerHTML = '';
-            
-            for (let y = 0; y < boardSize; y++) {
-                for (let x = 0; x < boardSize; x++) {
-                    const cell = document.createElement('div');
-                    cell.className = `cell ${(x + y) % 2 === 0 ? 'light' : 'dark'}`;
-                    cell.id = `cell-${x}-${y}`;
-                    cell.dataset.x = x;
-                    cell.dataset.y = y;
-                    
-                    // Koordináták megjelenítése
-                    const coords = document.createElement('div');
-                    coords.className = 'coordinates';
-                    coords.textContent = `${x + 1},${y + 1}`;
-                    cell.appendChild(coords);
-                    
-                    // Lépésszám megjelenítése
-                    const number = document.createElement('div');
-                    number.className = 'cell-number';
-                    cell.appendChild(number);
-                    
-                    chessboard.appendChild(cell);
-                }
-            }
-        }
-
-        // Megoldás mátrix létrehozása
-        function createSolutionGrid() {
-            const grid = document.getElementById('solutionGrid');
-            grid.innerHTML = '';
-            
-            for (let i = 0; i < boardSize * boardSize; i++) {
-                const cell = document.createElement('div');
-                cell.className = 'solution-cell';
-                cell.id = `sol-cell-${i}`;
-                grid.appendChild(cell);
-            }
-        }
-
-        // Megoldás keresése
-        async function solveTour() {
-            const startX = parseInt(document.getElementById('startX').value) - 1;
-            const startY = parseInt(document.getElementById('startY').value) - 1;
-            
-            if (startX < 0 || startX >= boardSize || startY < 0 || startY >= boardSize) {
-                alert('Kérlek, adj meg érvényes koordinátákat (1-8)!');
-                return;
-            }
-            
-            // Törlés és újrainicializálás
-            resetBoard();
-            backtracks = 0;
-            attempts = 1;
-            
-            // Statisztikák
-            document.getElementById('backtracks').textContent = backtracks;
-            document.getElementById('attempts').textContent = attempts;
-            
-            // Betöltés indítása
-            document.getElementById('loading').style.display = 'block';
-            startTime = Date.now();
-            
-            // Megoldás keresése (aszinkron módon, hogy ne fagyjon ki a UI)
-            setTimeout(() => {
-                board = Array(boardSize).fill().map(() => Array(boardSize).fill(0));
-                solutionMatrix = Array(boardSize).fill().map(() => Array(boardSize).fill(0));
-                
-                // Kezdőpozíció beállítása
-                board[startY][startX] = 1;
-                solutionMatrix[startY][startX] = 1;
-                
-                // Megoldás keresése Warnsdorff algoritmussal
-                const success = solveKnightTour(startX, startY, 2);
-                
-                if (!success) {
-                    // Ha nem sikerült, próbáljunk fordított sorrenddel
-                    attempts++;
-                    document.getElementById('attempts').textContent = attempts;
-                    resetBoard();
-                    board = Array(boardSize).fill().map(() => Array(boardSize).fill(0));
-                    board[startY][startX] = 1;
-                    
-                    const successAlt = solveKnightTourAlt(startX, startY, 2);
-                    
-                    if (!successAlt) {
-                        // Ha ez sem működik, használjunk előre definiált megoldást
-                        attempts++;
-                        document.getElementById('attempts').textContent = attempts;
-                        usePredefinedSolution(startX, startY);
-                    }
-                }
-                
-                // Frissítés
-                updateDisplay();
-                
-                // Statisztikák frissítése
-                const elapsedTime = (Date.now() - startTime) / 1000;
-                document.getElementById('timeStat').textContent = `${elapsedTime.toFixed(2)}s`;
-                document.getElementById('loading').style.display = 'none';
-            }, 100);
-        }
-
-        // Warnsdorff algoritmus
-        function solveKnightTour(x, y, moveNum) {
-            if (moveNum > boardSize * boardSize) {
-                return true;
-            }
-            
-            // Lehetséges lépések gyűjtése
-            const possibleMoves = [];
-            
-            for (const [dx, dy] of knightMoves) {
-                const nx = x + dx;
-                const ny = y + dy;
-                
-                if (isValidMove(nx, ny)) {
-                    const degree = countPossibleMoves(nx, ny);
-                    possibleMoves.push({ nx, ny, degree });
-                }
-            }
-            
-            // Rendezés a legkevesebb lehetőség szerint (Warnsdorff szabály)
-            possibleMoves.sort((a, b) => a.degree - b.degree);
-            
-            // Lépések kipróbálása
-            for (const move of possibleMoves) {
-                board[move.ny][move.nx] = moveNum;
-                solutionMatrix[move.ny][move.nx] = moveNum;
-                
-                if (solveKnightTour(move.nx, move.ny, moveNum + 1)) {
-                    return true;
-                }
-                
-                // Backtrack
-                backtracks++;
-                document.getElementById('backtracks').textContent = backtracks;
-                board[move.ny][move.nx] = 0;
-                solutionMatrix[move.ny][move.nx] = 0;
-            }
-            
-            return false;
-        }
-
-        // Alternatív verzió (fordított sorrend)
-        function solveKnightTourAlt(x, y, moveNum) {
-            if (moveNum > boardSize * boardSize) {
-                return true;
-            }
-            
-            const possibleMoves = [];
-            
-            for (const [dx, dy] of knightMoves) {
-                const nx = x + dx;
-                const ny = y + dy;
-                
-                if (isValidMove(nx, ny)) {
-                    const degree = countPossibleMoves(nx, ny);
-                    possibleMoves.push({ nx, ny, degree });
-                }
-            }
-            
-            // Fordított sorrend: a legtöbb lehetőséggel rendelkező először
-            possibleMoves.sort((a, b) => b.degree - a.degree);
-            
-            for (const move of possibleMoves) {
-                board[move.ny][move.nx] = moveNum;
-                solutionMatrix[move.ny][move.nx] = moveNum;
-                
-                if (solveKnightTourAlt(move.nx, move.ny, moveNum + 1)) {
-                    return true;
-                }
-                
-                backtracks++;
-                document.getElementById('backtracks').textContent = backtracks;
-                board[move.ny][move.nx] = 0;
-                solutionMatrix[move.ny][move.nx] = 0;
-            }
-            
-            return false;
-        }
-
-        // Előre definiált megoldás
-        function usePredefinedSolution(startX, startY) {
-            // Egy előre definiált teljes kör
-            const predefined = [
-                [1, 38, 55, 34, 3, 36, 19, 22],
-                [54, 47, 2, 37, 20, 23, 4, 17],
-                [39, 56, 33, 46, 35, 18, 21, 10],
-                [48, 53, 40, 57, 24, 11, 16, 5],
-                [41, 32, 49, 52, 45, 6, 9, 12],
-                [50, 27, 42, 31, 58, 25, 14, 7],
-                [43, 30, 51, 26, 13, 8, 59, 64],
-                [28, 49, 44, 29, 60, 63, 2, 15]
-            ];
-            
-            // Átalakítás a kezdőpozícióhoz
-            const startVal = predefined[startY][startX];
-            
-            for (let y = 0; y < boardSize; y++) {
-                for (let x = 0; x < boardSize; x++) {
-                    let val = predefined[y][x];
-                    // Átalakítás, hogy a kezdőpozíción 1 legyen
-                    val = ((val - startVal + 64) % 64) + 1;
-                    board[y][x] = val;
-                    solutionMatrix[y][x] = val;
-                }
-            }
-        }
-
-        // Segédfüggvények
-        function isValidMove(x, y) {
-            return x >= 0 && x < boardSize && y >= 0 && y < boardSize && board[y][x] === 0;
-        }
-
-        function countPossibleMoves(x, y) {
-            let count = 0;
-            for (const [dx, dy] of knightMoves) {
-                const nx = x + dx;
-                const ny = y + dy;
-                if (isValidMove(nx, ny)) {
-                    count++;
-                }
-            }
-            return count;
-        }
-
-        // Kijelző frissítése
-        function updateDisplay() {
-            const startX = parseInt(document.getElementById('startX').value) - 1;
-            const startY = parseInt(document.getElementById('startY').value) - 1;
-            
-            let maxStep = 0;
-            let visitedCells = 0;
-            
-            // Sakktábla frissítése
-            for (let y = 0; y < boardSize; y++) {
-                for (let x = 0; x < boardSize; x++) {
-                    const cell = document.getElementById(`cell-${x}-${y}`);
-                    const number = cell.querySelector('.cell-number');
-                    
-                    if (x === startX && y === startY) {
-                        cell.classList.add('start');
-                        cell.classList.remove('light', 'dark');
-                    } else {
-                        cell.classList.remove('start');
-                        cell.className = `cell ${(x + y) % 2 === 0 ? 'light' : 'dark'}`;
-                    }
-                    
-                    if (board[y][x] > 0) {
-                        number.textContent = board[y][x];
-                        cell.classList.add('visited');
-                        visitedCells++;
-                        maxStep = Math.max(maxStep, board[y][x]);
-                    } else {
-                        number.textContent = '';
-                        cell.classList.remove('visited');
-                    }
-                }
-            }
-            
-            // Megoldás mátrix frissítése
-            for (let y = 0; y < boardSize; y++) {
-                for (let x = 0; x < boardSize; x++) {
-                    const index = y * boardSize + x;
-                    const cell = document.getElementById(`sol-cell-${index}`);
-                    cell.textContent = solutionMatrix[y][x] || '';
-                    
-                    // Színezés a mátrixban
-                    if (solutionMatrix[y][x] === 1) {
-                        cell.style.background = 'linear-gradient(45deg, #ff6b6b, #ff8e53)';
-                        cell.style.color = 'white';
-                    } else if (solutionMatrix[y][x] > 0) {
-                        cell.style.background = '#444';
-                        cell.style.color = 'white';
-                    } else {
-                        cell.style.background = '#222';
-                        cell.style.color = '#666';
-                    }
-                }
-            }
-            
-            // Lépésszámláló frissítése
-            document.getElementById('stepCounter').textContent = 
-                `Lépések: ${visitedCells}/64 (${maxStep}. lépésnél tart)`;
-        }
-
-        // Tábla törlése
-        function resetBoard() {
-            board = Array(boardSize).fill().map(() => Array(boardSize).fill(0));
-            solutionMatrix = Array(boardSize).fill().map(() => Array(boardSize).fill(0));
-            updateDisplay();
-            document.getElementById('timeStat').textContent = '0s';
-            document.getElementById('backtracks').textContent = '0';
-            document.getElementById('attempts').textContent = '1';
-        }
-
-        // Inicializálás oldalbetöltéskor
-        window.onload = init;
-
-        // Input validáció
-        document.getElementById('startX').addEventListener('change', function() {
-            let val = parseInt(this.value);
-            if (val < 1) this.value = 1;
-            if (val > 8) this.value = 8;
-        });
-
-        document.getElementById('startY').addEventListener('change', function() {
-            let val = parseInt(this.value);
-            if (val < 1) this.value = 1;
-            if (val > 8) this.value = 8;
-        });
-
-        // Gyorsgombok
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.key === 'Enter') {
-                solveTour();
-            }
-            if (e.key === 'Escape') {
-                resetBoard();
-            }
-        });
-    </script>
-</body>
-</html>
+                <div class="code-explanation">
+                    <h4>📖 Kód Magyarázata:</h4>
+                    <ul class="explanation-list">
+                        <li><strong>moves lista</strong>: A l
