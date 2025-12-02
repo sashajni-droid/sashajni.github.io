@@ -12,7 +12,7 @@
         }
 
         body {
-            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
             color: #e0e0e0;
             min-height: 100vh;
@@ -21,7 +21,7 @@
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -45,7 +45,6 @@
             background-clip: text;
             color: transparent;
             font-weight: 700;
-            letter-spacing: 1px;
         }
 
         h1::before {
@@ -73,12 +72,27 @@
             }
         }
 
+        .left-panel {
+            display: grid;
+            grid-template-rows: auto auto;
+            gap: 30px;
+        }
+
+        .right-panel {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            gap: 30px;
+        }
+
         .code-section {
             background: rgba(0, 20, 40, 0.8);
             border-radius: 15px;
             border: 1px solid rgba(100, 150, 200, 0.2);
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            height: 600px;
+            display: flex;
+            flex-direction: column;
         }
 
         .code-header {
@@ -130,9 +144,9 @@
         }
 
         .code-container {
-            padding: 0;
-            max-height: 700px;
+            flex: 1;
             overflow-y: auto;
+            padding: 0;
         }
 
         pre {
@@ -142,6 +156,7 @@
             font-size: 0.95rem;
             line-height: 1.5;
             tab-size: 4;
+            height: 100%;
         }
 
         code {
@@ -157,21 +172,17 @@
         .builtin { color: #8be9fd; }
         .class-name { color: #50fa7b; }
 
-        .game-section {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-
-        .input-panel {
+        .explanation-section {
             background: rgba(0, 20, 40, 0.8);
-            padding: 25px;
             border-radius: 15px;
             border: 1px solid rgba(100, 150, 200, 0.2);
+            padding: 25px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            height: 600px;
+            overflow-y: auto;
         }
 
-        .input-panel h2 {
+        .explanation-section h2 {
             color: #88c0d0;
             margin-bottom: 20px;
             font-size: 1.4rem;
@@ -180,19 +191,77 @@
             gap: 10px;
         }
 
-        .input-panel h2::before {
-            content: "⚙️";
+        .explanation-section h2::before {
+            content: "📚";
         }
 
-        .input-group {
+        .explanation-content {
+            line-height: 1.7;
+        }
+
+        .explanation-item {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: rgba(0, 30, 60, 0.5);
+            border-radius: 10px;
+            border-left: 4px solid #00b4db;
+        }
+
+        .explanation-item h3 {
+            color: #50fa7b;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .explanation-item p {
+            color: #c0c0c0;
+            font-size: 0.95rem;
+        }
+
+        .code-snippet {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+            color: #f1fa8c;
+            border: 1px solid rgba(100, 150, 200, 0.2);
+        }
+
+        .game-section {
+            background: rgba(0, 20, 40, 0.8);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(100, 150, 200, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .game-section h2 {
+            color: #88c0d0;
             margin-bottom: 20px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .game-section h2::before {
+            content: "🎮";
+        }
+
+        .input-panel {
+            margin-bottom: 25px;
         }
 
         .input-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         @media (max-width: 768px) {
@@ -201,27 +270,26 @@
             }
         }
 
-        .coord-input {
+        .input-group {
             display: flex;
-            align-items: center;
-            gap: 10px;
+            flex-direction: column;
+            gap: 8px;
         }
 
         label {
             color: #88c0d0;
             font-weight: 500;
-            min-width: 120px;
+            font-size: 0.95rem;
         }
 
         input[type="number"] {
-            flex: 1;
             padding: 12px 15px;
             background: rgba(255, 255, 255, 0.1);
             border: 2px solid rgba(100, 150, 200, 0.3);
             border-radius: 8px;
             color: white;
             font-size: 1rem;
-            font-family: 'Consolas', monospace;
+            font-family: inherit;
             transition: all 0.3s ease;
         }
 
@@ -249,8 +317,7 @@
             transition: all 0.3s ease;
             flex: 1;
             min-width: 160px;
-            font-family: 'Consolas', monospace;
-            letter-spacing: 0.5px;
+            font-family: inherit;
         }
 
         .btn-solve {
@@ -261,7 +328,6 @@
         .btn-solve:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 20px rgba(0, 180, 219, 0.4);
-            background: linear-gradient(45deg, #00c8ff, #0099cc);
         }
 
         .btn-reset {
@@ -272,7 +338,6 @@
         .btn-reset:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 20px rgba(138, 43, 226, 0.4);
-            background: linear-gradient(45deg, #9b30ff, #5a00a8);
         }
 
         .btn-copy {
@@ -283,15 +348,13 @@
         .btn-copy:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 20px rgba(255, 140, 0, 0.4);
-            background: linear-gradient(45deg, #ffa500, #ff5500);
         }
 
         .stats-panel {
-            background: rgba(0, 20, 40, 0.8);
+            background: rgba(0, 30, 60, 0.5);
             padding: 20px;
-            border-radius: 15px;
-            border: 1px solid rgba(100, 150, 200, 0.2);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            margin-top: 25px;
         }
 
         .stats-grid {
@@ -309,17 +372,16 @@
         .stat-item {
             text-align: center;
             padding: 15px;
-            background: rgba(0, 30, 60, 0.5);
-            border-radius: 10px;
+            background: rgba(0, 20, 40, 0.8);
+            border-radius: 8px;
             border: 1px solid rgba(100, 150, 200, 0.2);
         }
 
         .stat-value {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: bold;
             color: #00b4db;
             margin-bottom: 5px;
-            font-family: 'Consolas', monospace;
         }
 
         .stat-label {
@@ -421,60 +483,6 @@
             font-weight: normal;
         }
 
-        .solution-section {
-            background: rgba(0, 20, 40, 0.8);
-            padding: 25px;
-            border-radius: 15px;
-            border: 1px solid rgba(100, 150, 200, 0.2);
-            margin-top: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .solution-section h2 {
-            color: #88c0d0;
-            margin-bottom: 20px;
-            font-size: 1.4rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .solution-section h2::before {
-            content: "📋";
-        }
-
-        .solution-grid {
-            display: grid;
-            grid-template-columns: repeat(8, 1fr);
-            gap: 2px;
-            background: #1a2a3a;
-            padding: 15px;
-            border-radius: 10px;
-            max-width: 500px;
-            margin: 0 auto;
-            font-family: 'Consolas', monospace;
-        }
-
-        .solution-cell {
-            padding: 12px;
-            text-align: center;
-            background: #2a3a4a;
-            color: #88c0d0;
-            font-weight: bold;
-            min-height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.9rem;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-        }
-
-        .solution-cell:hover {
-            transform: scale(1.05);
-            background: #3a4a5a;
-        }
-
         .loading {
             display: none;
             text-align: center;
@@ -498,126 +506,6 @@
             to { transform: rotate(360deg); }
         }
 
-        .code-links {
-            display: flex;
-            gap: 15px;
-            margin-top: 30px;
-            flex-wrap: wrap;
-        }
-
-        .code-link {
-            padding: 10px 20px;
-            background: rgba(0, 180, 219, 0.2);
-            border: 1px solid rgba(0, 180, 219, 0.4);
-            color: #88c0d0;
-            border-radius: 5px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .code-link:hover {
-            background: rgba(0, 180, 219, 0.4);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 180, 219, 0.3);
-        }
-
-        .github-corner {
-            position: fixed;
-            top: 0;
-            right: 0;
-            z-index: 1000;
-        }
-
-        .github-corner svg {
-            fill: #00b4db;
-            color: #0f2027;
-        }
-
-        .tooltip {
-            position: relative;
-            display: inline-block;
-            cursor: help;
-        }
-
-        .tooltip .tooltip-text {
-            visibility: hidden;
-            width: 300px;
-            background-color: rgba(0, 0, 0, 0.9);
-            color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 10px;
-            position: absolute;
-            z-index: 1000;
-            bottom: 125%;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            transition: opacity 0.3s;
-            font-size: 0.9rem;
-            line-height: 1.4;
-            border: 1px solid #00b4db;
-        }
-
-        .tooltip:hover .tooltip-text {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        .algorithm-info {
-            background: rgba(0, 30, 60, 0.7);
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-            border-left: 4px solid #00b4db;
-        }
-
-        .algorithm-info h3 {
-            color: #00b4db;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .algorithm-info h3::before {
-            content: "🔍";
-        }
-
-        .code-explanation {
-            background: rgba(0, 20, 40, 0.8);
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-            border: 1px solid rgba(100, 150, 200, 0.2);
-        }
-
-        .code-explanation h4 {
-            color: #88c0d0;
-            margin-bottom: 10px;
-        }
-
-        .explanation-list {
-            list-style-type: none;
-            padding-left: 20px;
-        }
-
-        .explanation-list li {
-            margin-bottom: 8px;
-            position: relative;
-            padding-left: 25px;
-        }
-
-        .explanation-list li::before {
-            content: "▶";
-            color: #00b4db;
-            position: absolute;
-            left: 0;
-        }
-
         ::-webkit-scrollbar {
             width: 10px;
             height: 10px;
@@ -636,6 +524,42 @@
         ::-webkit-scrollbar-thumb:hover {
             background: linear-gradient(45deg, #00c8ff, #0099cc);
         }
+
+        .algorithm-info {
+            background: rgba(0, 30, 60, 0.7);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #50fa7b;
+        }
+
+        .note {
+            background: rgba(255, 193, 7, 0.1);
+            border-left: 4px solid #ffc107;
+            padding: 10px 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: #ffcc80;
+        }
+
+        .function-list {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        .function-list li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .function-list li::before {
+            content: "👉";
+            color: #00b4db;
+            position: absolute;
+            left: 0;
+        }
     </style>
 </head>
 <body>
@@ -643,29 +567,22 @@
         <header>
             <h1>Knight's Tour - Python Megoldás</h1>
             <div class="subtitle">8×8-as sakktáblán – a ló teljes körbejárása Warnsdorff algoritmussal</div>
-            <div class="tooltip" style="display: inline-block; margin-top: 10px;">
-                ℹ️ Hogyan működik?
-                <div class="tooltip-text">
-                    A program Pythonban implementálja a Knight's Tour problémát. A Warnsdorff algoritmus mindig azt a következő mezőt választja, amelyből a legkevesebb további lépés lehetséges. A kód látható a jobb oldalon.
-                </div>
-            </div>
         </header>
 
         <div class="main-layout">
-            <!-- Python kód szekció -->
-            <div class="code-section">
-                <div class="code-header">
-                    <h2>Python Implementáció</h2>
-                    <div class="language-tabs">
-                        <button class="tab-btn active" onclick="showCode('python')">Python</button>
-                        <button class="tab-btn" onclick="showCode('java')">Java</button>
+            <!-- Bal oldali panel: Python kód -->
+            <div class="left-panel">
+                <div class="code-section">
+                    <div class="code-header">
+                        <h2>Python Implementáció</h2>
+                        <div class="language-tabs">
+                            <button class="tab-btn active" onclick="showCode('python')">Python</button>
+                            <button class="tab-btn" onclick="showCode('java')">Java</button>
+                        </div>
                     </div>
-                </div>
-                <div class="code-container">
-                    <!-- Python kód -->
-                    <pre id="python-code" style="display: block;"><code><span class="comment">#!/usr/bin/env python3</span>
+                    <div class="code-container">
+                        <pre id="python-code" style="display: block;"><code><span class="comment">#!/usr/bin/env python3</span>
 <span class="comment"># Knight's Tour - Warnsdorff algoritmus Python implementációja</span>
-<span class="comment"># Készítve: 2024.01.15</span>
 
 <span class="keyword">import</span> sys
 sys.setrecursionlimit(<span class="number">10000</span>)
@@ -759,8 +676,7 @@ sys.setrecursionlimit(<span class="number">10000</span>)
 <span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:
     main()</code></pre>
 
-                    <!-- Java kód -->
-                    <pre id="java-code" style="display: none;"><code><span class="keyword">import</span> java.util.*;
+                        <pre id="java-code" style="display: none;"><code><span class="keyword">import</span> java.util.*;
 
 <span class="keyword">public</span> <span class="keyword">class</span> <span class="class-name">KnightTour</span> {
     <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="builtin">int</span>[][] MOVES = {
@@ -815,9 +731,46 @@ sys.setrecursionlimit(<span class="number">10000</span>)
         <span class="keyword">return</span> <span class="builtin">false</span>;
     }
 }</code></pre>
+                    </div>
                 </div>
 
-                <div class="code-explanation">
-                    <h4>📖 Kód Magyarázata:</h4>
-                    <ul class="explanation-list">
-                        <li><strong>moves lista</strong>: A l
+                <!-- Magyarázat a kódhoz -->
+                <div class="explanation-section">
+                    <h2>Kód Magyarázata</h2>
+                    <div class="explanation-content">
+                        <div class="explanation-item">
+                            <h3>📋 A probléma</h3>
+                            <p>A Knight's Tour (Lovasjárás) egy matematikai probléma, ahol a sakk lójával egy 8×8-as táblán kell minden mezőt pontosan egyszer érinteni. A ló "L" alakban mozog: 2 mezőt egy irányba és 1 mezőt a merőleges irányba.</p>
+                        </div>
+
+                        <div class="explanation-item">
+                            <h3>⚙️ Warnsdorff Algoritmus</h3>
+                            <p>A program a Warnsdorff heurisztikát használja: mindig azt a következő mezőt választja, amelyből a legkevesebb további lépés lehetséges. Ez csökkenti a zsákutcák kialakulásának valószínűségét.</p>
+                            <div class="code-snippet">moves_with_degree.sort(key=lambda x: x[0])  # Legkevesebb lehetőség először</div>
+                        </div>
+
+                        <div class="explanation-item">
+                            <h3>🔧 Főbb függvények</h3>
+                            <ul class="function-list">
+                                <li><strong>is_valid()</strong>: Ellenőrzi, hogy a lépés a táblán belül van-e és üres-e</li>
+                                <li><strong>get_valid_moves()</strong>: Visszaadja az összes lehetséges lépést</li>
+                                <li><strong>warnsdorff_order()</strong>: Rendezi a lépéseket a legkevesebb lehetőség szerint</li>
+                                <li><strong>solve_knights_tour()</strong>: Rekurzív backtracking algoritmus a megoldás keresésére</li>
+                            </ul>
+                        </div>
+
+                        <div class="explanation-item">
+                            <h3>🔄 Backtracking Mechanizmus</h3>
+                            <p>Ha az algoritmus zsákutcába ér, visszalép (backtracking) és másik útvonalat próbál. Ez az alábbi kódrészletben valósul meg:</p>
+                            <div class="code-snippet">if solve_knights_tour(nx, ny, move_count + 1, board):
+    return True
+board[nx][ny] = 0  # Backtrack</div>
+                            <p>A backtracking lehetővé teszi, hogy az algoritmus "visszamenjen" és más útvonalat próbáljon, ha az aktuális út zsákutcába vezet.</p>
+                        </div>
+
+                        <div class="algorithm-info">
+                            <h3>📊 Algoritmus Lépései</h3>
+                            <p>1. Kezdőpozíció beállítása<br>
+                               2. Érvényes lépések keresése<br>
+                               3. Warnsdorff szerinti rendezés<br>
+                               4. Rekur
