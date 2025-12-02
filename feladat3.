@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1. Feladat - Rekurzió</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            border-radius: 15px;
+            color: #2c3e50;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #34495e;
+        }
+
+        .task-section {
+            margin: 25px 0;
+            padding: 20px;
+            border-radius: 15px;
+            background: #f8f9fa;
+            border-left: 5px solid #3498db;
+        }
+
+        .task-section h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .task-section h2 span {
+            background: #3498db;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .explanation {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .kid-explanation {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #ffc107;
+        }
+
+        .kid-explanation h3 {
+            color: #856404;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 10px;
+            display: block;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            font-size: 0.95rem;
+        }
+
+        .result-box {
+            background: #d4edda;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #28a745;
+        }
+
+        .result-box h3 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: transform 0.2s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .back-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .emoji {
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔢 1. Feladat - Rekurzió varázslata</h1>
+            <p>A HAPCI szó betűivel játszadozunk! 🎮 Nemes Tihamér NITV 1995/99  167/1</p>
+        </div>
+
+        <!-- A részfeladat -->
+        <div class="task-section">
+            <h2><span>A</span> Minden szó HAPCI betűiből (5 pont)</h2>
+            
+            <div class="explanation">
+                <strong>Feladat:</strong> Írjunk ki minden olyan szót, amit a HAPCI szó betűiből lehet készíteni! 
+                Egy betűt többször is használhatunk.
+            </div>
+
+            <div class="kid-explanation">
+                <h3>👶 10 éveseknek:</h3>
+                <p>Képzeld el, hogy van 5 különböző színes golyód: H, A, P, C, I. 
+                Ezekből bármelyik golyót kiveheted többször is, és sorba rakhatod őket. 
+                Minden lehetséges sorrendet ki akarunk írni! 🎨</p>
+            </div>
+
+            <code>
+def general_szavak(hossz, prefix=""):
+    if hossz == 0:
+        print(prefix)
+        return
+    
+    betuk = ['H', 'A', 'P', 'C', 'I']
+    for betu in betuk:
+        general_szavak(hossz - 1, prefix + betu)
+
+# 5 hosszú szavak generálása
+print("Minden 5 hosszú szó HAPCI betűiből:")
+general_szavak(5)
+            </code>
+
+            <div class="result-box">
+                <h3>🏆 Végeredmény:</h3>
+                <p>Összesen: <strong>5⁵ = 3125</strong> különböző szó keletkezik</p>
+                <p>Az első pár szó például: HHHHH, HHHHA, HHHHP, HHHHC, HHHHI, HHHHA, ...</p>
+            </div>
+        </div>
+
+        <!-- B részfeladat -->
+        <div class="task-section">
+            <h2><span>B</span> Hányadik betű? (3 pont)</h2>
+            
+            <div class="explanation">
+                <strong>Feladat:</strong> Egy adott szó i. helyén a HAPCI szó hányadik betűje szerepel?
+            </div>
+
+            <div class="kid-explanation">
+                <h3>👶 10 éveseknek:</h3>
+                <p>Ha a HAPCI szó betűit számozzuk: H=1, A=2, P=3, C=4, I=5. 
+                A feladat, hogy megmondjuk, hogy például a "CHIPC" szó első betűje (C) 
+                a HAPCI szó hányadik betűje (4-es). 🎯</p>
+            </div>
+
+            <code>
+def hanyadik_betu(szo, pozicio):
+    hapci = "HAPCI"
+    betu = szo[pozicio]  # i. pozíció betűje
+    return hapci.index(betu) + 1  # +1 mert 1-től számozunk
+
+# Példa:
+szo = "CHIPC"
+print(f"A '{szo}' szó betűinek sorszáma HAPCI-ban:")
+for i in range(len(szo)):
+    sorszam = hanyadik_betu(szo, i)
+    print(f"  {i+1}. betű ({szo[i]}) → {sorszam}. a HAPCI-ban")
+            </code>
+        </div>
+
+        <!-- C részfeladat -->
+        <div class="task-section">
+            <h2><span>C</span> 55-szer (3125) (3 pont)</h2>
+            
+            <div class="explanation">
+                <strong>Feladat:</strong> Hány különböző szó keletkezik, ha 5 betűből 5 hosszú szavakat készítünk?
+            </div>
+
+            <div class="kid-explanation">
+                <h3>:)</h3>
+                <p>Minden helyre 5-féle betűt tehetünk. 
+                Az első helyre: 5 lehetőség, a másodikra is 5, a harmadikra is 5... 
+                Összesen: 5 × 5 × 5 × 5 × 5 = 3125 lehetőség. 
+                Ez olyan, mint amikor 5 különböző fagylaltból választasz 5 gombócot! 🍦</p>
+            </div>
+
+            <code>
+# Egyszerű számolás Pythonban
+darab = 5 ** 5
+print(f"5 betűből 5 hosszú szavak száma: 5⁵ = {darab}")
+print("Tehát 3125 különböző szó készíthető!")
+            </code>
+        </div>
+
+        <!-- D részfeladat -->
+        <div class="task-section">
+            <h2><span>D</span> Szavak egyedi betűkkel (6 pont)</h2>
+            
+            <div class="explanation">
+                <strong>Feladat:</strong> Minden olyan szót, amely a HAPCI szó betűiből előállítható, 
+                de egy betű csak egyszer fordulhat elő.
+            </div>
+
+            <div class="kid-explanation">
+                <h3>:)</h3>
+                <p>Most már nem vehetsz ki egy golyót többször! 
+                Az összes golyót felhasználva kell különböző sorrendeket készítened. 
+                Ez olyan, mint amikor 5 embert próbálsz leültetni 5 székre! 💺</p>
+            </div>
+
+            <code>
+from itertools import permutations
+
+def egyedi_szavak():
+    betuk = ['H', 'A', 'P', 'C', 'I']
+    szavak = []
+    
+    # Minden lehetséges sorrend (permutáció)
+    for perm in permutations(betuk):
+        szo = ''.join(perm)
+        szavak.append(szo)
+    
+    return szavak
+
+# Összes egyedi szó kiírása
+print("Minden egyedi szó HAPCI betűivel (minden betű csak egyszer):")
+osszes_szo = egyedi_szavak()
+for szo in osszes_szo:
+    print(szo)
+            </code>
+
+            <div class="result-box">
+                <h3>🏆 Végeredmény:</h3>
+                <p>Összesen: <strong>5! = 120</strong> különböző szó keletkezik</p>
+                <p>Példák: HAPCI, HAPIC, HACPI, HACIP, HAIPC, ...</p>
+            </div>
+        </div>
+
+        <!-- E részfeladat -->
+        <div class="task-section">
+            <h2><span>E</span> 5!-szor</h2>
+            
+            <div class="explanation">
+                <strong>Feladat:</strong> Hány különböző szó keletkezik, ha minden betűt pontosan egyszer használunk?
+            </div>
+
+            <div class="kid-explanation">
+                <h3>:)</h3>
+                <p>5! azt jelenti, hogy 5 × 4 × 3 × 2 × 1 = 120. 
+                Az első helyre 5 golyó közül választhatsz. 
+                Miután kivetted egyet, már csak 4 maradt, így a második helyre 4-féle... 
+                Így számolva kapjuk meg az 120-at! 🧮</p>
+            </div>
+
+            <code>
+import math
+
+# 5! (5 faktoriális) kiszámítása
+eredmeny = math.factorial(5)
+print(f"5! = 5 × 4 × 3 × 2 × 1 = {eredmeny}")
+print("Tehát 120 különböző szó készíthető, ha minden betűt csak egyszer használunk!")
+
+# Vagy saját magunk is számolhatjuk:
+szamolas = 1
+for i in range(1, 6):
+    szamolas *= i
+    print(f"{i}! = {szamolas}")
+            </code>
+        </div>
+
+        <!-- Összegzés -->
+        <div class="task-section" style="background: #e8f4f8; border-left-color: #17a2b8;">
+            <h2>📊 Összefoglalás</h2>
+            <div class="explanation">
+                <p><strong>HAPCI szó betűi:</strong> H, A, P, C, I</p>
+                <p><strong>A rész:</strong> 5⁵ = 3125 szó (betűk többször is lehetnek)</p>
+                <p><strong>D rész:</strong> 5! = 120 szó (minden betű csak egyszer)</p>
+                <p><strong>Összes pont:</strong> 5 + 3 + 3 + 6 + 3 = <strong>20 pont</strong></p>
+            </div>
+        </div>
+
+        <center>
+            <a href="index.html" class="back-btn">⬅️ Vissza a főoldalra</a>
+        </center>
+    </div>
+</body>
+</html>
