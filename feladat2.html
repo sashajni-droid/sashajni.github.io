@@ -1,25 +1,853 @@
-# Knight's Tour - Feladat leírása, Kód, Magyarázat
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knight's Tour - Feladat, Kód, Magyarázat</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-## 📋 Tartalom
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
 
-Ez a dokumentum a Knight's Tour (Lovasjárás) problémát mutatja be három fő részben:
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
 
-1. **Feladat leírása** - A probléma pontos matematikai megfogalmazása
-2. **Python megoldás** - Teljes, működő kód Warnsdorff algoritmussal
-3. **Részletes magyarázat** - Az algoritmus lépései és működése
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
 
-## 🚀 Használat
+        h1 {
+            font-size: 2.8rem;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
 
-Egyszerűen nyisd meg a `knight-tour-feladat-kod-magyarazat.html` fájlt bármely böngészőben.
+        h1::before {
+            content: "♞ ";
+            color: #667eea;
+        }
 
-## 📊 Funkciók
+        .subtitle {
+            font-size: 1.2rem;
+            color: #4a5568;
+            margin-bottom: 20px;
+        }
 
-- **Feladat specifikáció** - Pontos bemeneti/kimeneti formátum
-- **Teljes Python kód** - Szintaxis kiemeléssel
-- **Algoritmus magyarázata** - Lépésről lépésre
-- **Komplexitáselemzés** - Idő- és memóriabecslések
-- **Letölthető kód** - Egy kattintással
+        .sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
 
-## 📝 Licenc
+        @media (max-width: 900px) {
+            .sections {
+                grid-template-columns: 1fr;
+            }
+        }
 
-Oktatási célokra szabadon felhasználható
+        .section {
+            background: #f7fafc;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-task {
+            border-left-color: #4299e1;
+        }
+
+        .section-code {
+            border-left-color: #48bb78;
+        }
+
+        .section-explanation {
+            border-left-color: #ed8936;
+            grid-column: span 2;
+        }
+
+        @media (max-width: 900px) {
+            .section-explanation {
+                grid-column: span 1;
+            }
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: #2d3748;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h2::before {
+            font-size: 1.5rem;
+        }
+
+        .section-task h2::before {
+            content: "📋";
+        }
+
+        .section-code h2::before {
+            content: "🐍";
+        }
+
+        .section-explanation h2::before {
+            content: "📚";
+        }
+
+        .problem-statement {
+            background: #ebf8ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 1px solid #bee3f8;
+        }
+
+        .io-example {
+            background: #f0fff4;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 1px solid #c6f6d5;
+        }
+
+        .constraints {
+            background: #fffaf0;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 1px solid #feebc8;
+        }
+
+        .code-container {
+            background: #282a36;
+            color: #f8f8f2;
+            padding: 25px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin: 15px 0;
+        }
+
+        .keyword { color: #ff79c6; }
+        .function { color: #50fa7b; }
+        .string { color: #f1fa8c; }
+        .comment { color: #6272a4; }
+        .number { color: #bd93f9; }
+        .operator { color: #ff79c6; }
+        .builtin { color: #8be9fd; }
+
+        .explanation-points {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .explanation-points li {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .point-title {
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .algorithm-steps {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 2px solid #cbd5e0;
+        }
+
+        .step {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .step::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .knight-move-demo {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: #e6fffa;
+            border-radius: 10px;
+            border: 2px solid #81e6d9;
+        }
+
+        .chessboard-mini {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 1px;
+            background: #2d3748;
+            padding: 10px;
+            border-radius: 5px;
+            max-width: 400px;
+            margin: 20px auto;
+        }
+
+        .mini-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .mini-light {
+            background: #f0d9b5;
+            color: #000;
+        }
+
+        .mini-dark {
+            background: #b58863;
+            color: #fff;
+        }
+
+        .mini-knight {
+            background: #4299e1;
+            color: white;
+            font-weight: bold;
+        }
+
+        .complexity {
+            background: #fed7d7;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #e53e3e;
+        }
+
+        .note {
+            background: #feebc8;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #dd6b20;
+        }
+
+        .download-section {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background: #667eea;
+            border-radius: 12px;
+            color: white;
+        }
+
+        .download-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: transform 0.2s;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .code-complexity {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .complexity-item {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid #cbd5e0;
+        }
+
+        .complexity-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .complexity-label {
+            font-size: 0.9rem;
+            color: #718096;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: #edf2f7;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        tr:nth-child(even) {
+            background: #f7fafc;
+        }
+
+        pre {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Knight's Tour (Lovasjárás)</h1>
+            <div class="subtitle">Feladat leírása, Python megoldás és részletes magyarázat</div>
+        </header>
+
+        <div class="sections">
+            <!-- 1. Feladat leírása -->
+            <div class="section section-task">
+                <h2>Feladat Leírása</h2>
+                
+                <div class="problem-statement">
+                    <h3>📝 Probléma megfogalmazása</h3>
+                    <p>Adott egy 8×8-as sakktábla és egy sakkló kezdő pozíciója. A feladat egy olyan lépéssorozat megkeresése, ahol a ló minden mezőt pontosan egyszer érint.</p>
+                </div>
+
+                <div class="constraints">
+                    <h3>⚖️ Korlátozások</h3>
+                    <ul>
+                        <li>Tábla mérete: 8×8 (64 mező)</li>
+                        <li>Kezdőpozíció: 1 ≤ x ≤ 8, 1 ≤ y ≤ 8</li>
+                        <li>Minden mezőt pontosan egyszer kell érinteni</li>
+                        <li>A ló "L" alakban mozog</li>
+                    </ul>
+                </div>
+
+                <div class="io-example">
+                    <h3>📤 Bemenet/Kimenet formátuma</h3>
+                    <p><strong>Bemenet:</strong> Egyetlen sor két egész számmal (x y)</p>
+                    <p><strong>Kimenet:</strong> 8 sor, minden sorban 8 szám szóközzel elválasztva</p>
+                    
+                    <h4 style="margin-top: 15px;">Példa:</h4>
+                    <div class="table-container">
+                        <table>
+                            <tr>
+                                <th>Bemenet</th>
+                                <th>Kimenet</th>
+                            </tr>
+                            <tr>
+                                <td style="font-family: monospace;">2 1</td>
+                                <td style="font-family: monospace; font-size: 0.9rem;">
+                                    8 1 10 13 6 3 20 17<br>
+                                    11 14 7 2 19 16 23 4<br>
+                                    26 9 12 15 24 5 18 21<br>
+                                    49 58 25 28 51 22 33 30<br>
+                                    40 27 50 59 32 29 52 35<br>
+                                    57 48 41 44 37 34 31 62<br>
+                                    42 39 46 55 60 63 36 53<br>
+                                    47 56 43 38 45 54 61 64
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="knight-move-demo">
+                    <h3>🐎 A ló lépései</h3>
+                    <p>A ló "L" alakban mozog:</p>
+                    <div class="chessboard-mini">
+                        <!-- A ló mozgásának szemléltetése -->
+                        <div class="mini-cell mini-light"></div>
+                        <div class="mini-cell mini-dark">X</div>
+                        <div class="mini-cell mini-light"></div>
+                        <div class="mini-cell mini-dark">X</div>
+                        <div class="mini-cell mini-light"></div>
+                        <div class="mini-cell mini-dark"></div>
+                        <div class="mini-cell mini-light"></div>
+                        <div class="mini-cell mini-dark"></div>
+                        
+                        <div class="mini-cell mini-dark">X</div>
+                        <div class="mini-cell mini-light"></div>
+                        <div class="mini-cell mini-dark"></div>
+                        <div class="mini-cell mini-light"></div>
+                        <div class="mini-cell mini-dark">X</div>
+                        <div class="mini-cell mini-light"></div>
+                        <div class="mini-cell mini-dark"></div>
+                        <div class="mini-cell mini-light"></div>
+                        
+                        <div class="mini-cell mini-light"></div>
+                        <div class="mini-cell mini-dark"></div>
+                        <div class="mini-cell mini-light mini-knight">♞</div>
+                        <div class="mini-cell mini-dark"></div>
+                        <div class="mini-cell mini-light"></div>
+                        <div class="mini-cell mini-dark"></div>
+                        <div class="mini-cell mini-light"></div>
+                        <div class="mini-cell mini-dark"></div>
+                        
+                        <div class="mini-cell mini-dark">X</div>
+                        <div class="mini-cell mini-light"></div>
+                        <div class="mini-cell mini-dark"></div>
+                        <div class="mini-cell mini-light"></div>
+                        <div class="mini-cell mini-dark">X</div>
+                        <div class="mini-cell mini-light"></div>
+                        <div class="mini-cell mini-dark"></div>
+                        <div class="mini-cell mini-light"></div>
+                        
+                        <div class="mini-cell mini-light"></div>
+                        <div class="mini-cell mini-dark">X</div>
+                        <div class="mini-cell mini-light"></div>
+                        <div class="mini-cell mini-dark">X</div>
+                        <div class="mini-cell mini-light"></div>
+                        <div class="mini-cell mini-dark"></div>
+                        <div class="mini-cell mini-light"></div>
+                        <div class="mini-cell mini-dark"></div>
+                    </div>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">Az "X"-ek jelzik, hova ugrhat a ló</p>
+                </div>
+            </div>
+
+            <!-- 2. Python kód -->
+            <div class="section section-code">
+                <h2>Python Megoldás</h2>
+                
+                <div class="code-container">
+<pre><code><span class="comment">#!/usr/bin/env python3
+# Knight's Tour - Warnsdorff algoritmus</span>
+
+<span class="keyword">import</span> sys
+sys.setrecursionlimit(<span class="number">10000</span>)
+
+<span class="comment"># A ló lehetséges lépései (L-alakban)</span>
+<span class="function">moves</span> = [(<span class="number">2</span>, <span class="number">1</span>), (<span class="number">1</span>, <span class="number">2</span>), (<span class="operator">-</span><span class="number">1</span>, <span class="number">2</span>), (<span class="operator">-</span><span class="number">2</span>, <span class="number">1</span>),
+         (<span class="operator">-</span><span class="number">2</span>, <span class="operator">-</span><span class="number">1</span>), (<span class="operator">-</span><span class="number">1</span>, <span class="operator">-</span><span class="number">2</span>), (<span class="number">1</span>, <span class="operator">-</span><span class="number">2</span>), (<span class="number">2</span>, <span class="operator">-</span><span class="number">1</span>)]
+
+<span class="keyword">def</span> <span class="function">is_valid</span>(x, y, board):
+    <span class="string">"""Ellenőrzi, hogy a lépés érvényes-e"""</span>
+    <span class="keyword">return</span> <span class="number">1</span> &lt;= x &lt;= <span class="number">8</span> <span class="keyword">and</span> <span class="number">1</span> &lt;= y &lt;= <span class="number">8</span> <span class="keyword">and</span> board[x][y] == <span class="number">0</span>
+
+<span class="keyword">def</span> <span class="function">get_valid_moves</span>(x, y, board):
+    <span class="string">"""Visszaadja az összes érvényes lépést"""</span>
+    valid_moves = []
+    <span class="keyword">for</span> dx, dy <span class="keyword">in</span> moves:
+        nx, ny = x + dx, y + dy
+        <span class="keyword">if</span> is_valid(nx, ny, board):
+            valid_moves.append((nx, ny))
+    <span class="keyword">return</span> valid_moves
+
+<span class="keyword">def</span> <span class="function">warnsdorff_order</span>(x, y, board):
+    <span class="string">"""Warnsdorff szabály: a legkevesebb lehetőséget adó lépés először"""</span>
+    valid_moves = get_valid_moves(x, y, board)
+    moves_with_degree = []
+    
+    <span class="keyword">for</span> nx, ny <span class="keyword">in</span> valid_moves:
+        degree = len(get_valid_moves(nx, ny, board))
+        moves_with_degree.append((degree, nx, ny))
+    
+    <span class="comment"># Rendezés a legkisebb fokszám szerint</span>
+    moves_with_degree.sort(key=<span class="keyword">lambda</span> x: x[<span class="number">0</span>])
+    
+    <span class="keyword">return</span> [(nx, ny) <span class="keyword">for</span> (degree, nx, ny) <span class="keyword">in</span> moves_with_degree]
+
+<span class="keyword">def</span> <span class="function">solve_knights_tour</span>(x, y, move_count, board):
+    <span class="string">"""Rekurzív megoldó algoritmus backtracking-el"""</span>
+    <span class="comment"># Alapeset: ha minden mezőt bejártunk</span>
+    <span class="keyword">if</span> move_count == <span class="number">64</span>:
+        <span class="keyword">return</span> <span class="builtin">True</span>
+    
+    <span class="comment"># Warnsdorff szerint rendezett lépések</span>
+    next_moves = warnsdorff_order(x, y, board)
+    
+    <span class="keyword">for</span> nx, ny <span class="keyword">in</span> next_moves:
+        <span class="comment"># Megjelöljük az aktuális lépést</span>
+        board[nx][ny] = move_count + <span class="number">1</span>
+        
+        <span class="comment"># Rekurzív hívás a következő lépéshez</span>
+        <span class="keyword">if</span> solve_knights_tour(nx, ny, move_count + <span class="number">1</span>, board):
+            <span class="keyword">return</span> <span class="builtin">True</span>
+        
+        <span class="comment"># Backtracking: visszalépés ha nem sikerült</span>
+        board[nx][ny] = <span class="number">0</span>
+    
+    <span class="keyword">return</span> <span class="builtin">False</span>
+
+<span class="keyword">def</span> <span class="function">print_board</span>(board):
+    <span class="string">"""Kiírja a sakktáblát a kívánt formátumban"""</span>
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="function">range</span>(<span class="number">1</span>, <span class="number">9</span>):
+        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="function">range</span>(<span class="number">1</span>, <span class="number">9</span>):
+            <span class="builtin">print</span>(board[i][j], end=<span class="string">" "</span>)
+        <span class="builtin">print</span>()
+
+<span class="keyword">def</span> <span class="function">main</span>():
+    <span class="string">"""Főprogram"""</span>
+    <span class="keyword">try</span>:
+        <span class="comment"># Bemenet beolvasása</span>
+        input_str = <span class="builtin">input</span>().strip()
+        <span class="keyword">if</span> <span class="keyword">not</span> input_str:
+            <span class="keyword">return</span>
+        
+        x, y = <span class="builtin">map</span>(<span class="builtin">int</span>, input_str.split())
+        
+        <span class="comment"># Sakktábla inicializálása (9×9, de csak 1-8-ig használjuk)</span>
+        board = [[<span class="number">0</span> <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="function">range</span>(<span class="number">9</span>)] <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="function">range</span>(<span class="number">9</span>)]
+        
+        <span class="comment"># Kezdőpozíció beállítása</span>
+        board[y][x] = <span class="number">1</span>
+        
+        <span class="comment"># Megoldás keresése</span>
+        <span class="keyword">if</span> solve_knights_tour(y, x, <span class="number">1</span>, board):
+            print_board(board)
+        <span class="keyword">else</span>:
+            <span class="builtin">print</span>(<span class="string">"Nem található megoldás"</span>)
+            
+    <span class="keyword">except</span> <span class="class-name">Exception</span> <span class="keyword">as</span> e:
+        <span class="builtin">print</span>(<span class="string">f"Hiba: {e}"</span>)
+
+<span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:
+    main()</code></pre>
+                </div>
+
+                <div class="code-complexity">
+                    <div class="complexity-item">
+                        <div class="complexity-value">O(8ᴺ)</div>
+                        <div class="complexity-label">Legrosszabb eset</div>
+                    </div>
+                    <div class="complexity-item">
+                        <div class="complexity-value">O(N²)</div>
+                        <div class="complexity-label">Warnsdorff-fel</div>
+                    </div>
+                    <div class="complexity-item">
+                        <div class="complexity-value">64!</div>
+                        <div class="complexity-label">Lehetséges utak</div>
+                    </div>
+                </div>
+
+                <div class="note">
+                    <h4>💡 Fontos megjegyzések:</h4>
+                    <ul>
+                        <li>A kód 1-től indexel (nem 0-tól) az olvashatóságért</li>
+                        <li>A Warnsdorff heurisztika jelentősen javítja a teljesítményt</li>
+                        <li>Backtracking nélkül a program végtelen ciklusba kerülne</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 3. Részletes magyarázat -->
+            <div class="section section-explanation">
+                <h2>Részletes Magyarázat</h2>
+                
+                <div class="algorithm-steps">
+                    <h3>📈 Algoritmus lépései</h3>
+                    <div class="step">Kezdőpozíció beállítása a táblán</div>
+                    <div class="step">Lehetséges lépések keresése a ló számára</div>
+                    <div class="step">Lépések rendezése Warnsdorff szabály szerint</div>
+                    <div class="step">Rekurzív próbálkozás a legígéretesebb lépéssel</div>
+                    <div class="step">Sikertelenség esetén backtracking (visszalépés)</div>
+                    <div class="step">Ismétlés, amíg minden mezőt be nem járunk</div>
+                </div>
+
+                <ul class="explanation-points">
+                    <li>
+                        <div class="point-title">🔍 1. Warnsdorff Heurisztika</div>
+                        <p>H. C. von Warnsdorff 1823-ban javasolta: mindig azt a mezőt válasszuk, amelyből a legkevesebb további lépés lehetséges. Ez drasztikusan csökkenti a keresési teret.</p>
+                    </li>
+                    
+                    <li>
+                        <div class="point-title">🔄 2. Rekurzió és Backtracking</div>
+                        <p>A <code>solve_knights_tour</code> függvény önmagát hívja (rekurzió). Ha egy ág zsákutcába vezet, visszalép (backtracking) és másik ágat próbál. Ez egy mélységi keresést (DFS) valósít meg.</p>
+                    </li>
+                    
+                    <li>
+                        <div class="point-title">🎯 3. Alapeset (Base Case)</div>
+                        <p>Amikor a lépésszám eléri a 64-et, az azt jelenti, hogy minden mezőt bejártunk. Ekkor a rekurzió megáll és <code>True</code> értékkel tér vissza.</p>
+                    </li>
+                    
+                    <li>
+                        <div class="point-title">⚡ 4. Időbonyolultság</div>
+                        <div class="complexity">
+                            <p><strong>Brute force:</strong> 8ᴺ (ahol N ≈ 63) → kiszámíthatatlan</p>
+                            <p><strong>Warnsdorff-fel:</strong> Gyakorlatilag polinomiális</p>
+                            <p><strong>Backtracking:</strong> Kivágja a sikertelen ágakat korán</p>
+                        </div>
+                    </li>
+                    
+                    <li>
+                        <div class="point-title">💾 5. Memóriahasználat</div>
+                        <p>A tábla 9×9-es (81 elem), de csak 64-et használunk. A rekurzív hívások maximális mélysége 64, ami elfér a stack-ben.</p>
+                    </li>
+                    
+                    <li>
+                        <div class="point-title">🎮 6. Gyakorlati alkalmazások</div>
+                        <ul>
+                            <li>Kombinatorikai optimalizálási problémák</li>
+                            <li>Végrehajtási útvonal tervezés robotoknál</li>
+                            <li>Telepítési sorrend meghatározása</li>
+                            <li>Játék AI fejlesztése</li>
+                        </ul>
+                    </li>
+                    
+                    <li>
+                        <div class="point-title">📊 7. Matematikai háttér</div>
+                        <p>A probléma Euler (1707-1783) idejéből származik. Gráfelméleti megközelítésben Hamilton-út keresés egy 64 csúcsú gráfon, ahol az élek a ló lehetséges lépései.</p>
+                    </li>
+                </ul>
+
+                <div class="note">
+                    <h4>🔧 Optimalizálási lehetőségek:</h4>
+                    <ul>
+                        <li><strong>Bitmask:</strong> Mezők állapotának bitműveletekkel történő tárolása</li>
+                        <li><strong>Iteratív mélységi keresés:</strong> Mélységkorlát bevezetése</li>
+                        <li><strong>Parallelizálás:</strong> Több szálon történő keresés</li>
+                        <li><strong>Cache:</strong> Korábban kiszámított állapotok tárolása</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="download-section">
+            <h3>📥 Letöltés</h3>
+            <p>A teljes kód letölthető egyetlen Python fájlként</p>
+            <a href="#" class="download-btn" onclick="downloadPythonCode()">knight_tour.py letöltése</a>
+        </div>
+
+        <footer>
+            <p>Knight's Tour - Feladat leírás, megoldás és magyarázat</p>
+            <p>© 2024 - Matematikai algoritmusok bemutatása</p>
+        </footer>
+    </div>
+
+    <script>
+        function downloadPythonCode() {
+            const pythonCode = `#!/usr/bin/env python3
+# Knight's Tour - Warnsdorff algoritmus
+
+import sys
+sys.setrecursionlimit(10000)
+
+# A ló lehetséges lépései (L-alakban)
+moves = [(2, 1), (1, 2), (-1, 2), (-2, 1),
+         (-2, -1), (-1, -2), (1, -2), (2, -1)]
+
+def is_valid(x, y, board):
+    """Ellenőrzi, hogy a lépés érvényes-e"""
+    return 1 <= x <= 8 and 1 <= y <= 8 and board[x][y] == 0
+
+def get_valid_moves(x, y, board):
+    """Visszaadja az összes érvényes lépést"""
+    valid_moves = []
+    for dx, dy in moves:
+        nx, ny = x + dx, y + dy
+        if is_valid(nx, ny, board):
+            valid_moves.append((nx, ny))
+    return valid_moves
+
+def warnsdorff_order(x, y, board):
+    """Warnsdorff szabály: a legkevesebb lehetőséget adó lépés először"""
+    valid_moves = get_valid_moves(x, y, board)
+    moves_with_degree = []
+    
+    for nx, ny in valid_moves:
+        degree = len(get_valid_moves(nx, ny, board))
+        moves_with_degree.append((degree, nx, ny))
+    
+    # Rendezés a legkisebb fokszám szerint
+    moves_with_degree.sort(key=lambda x: x[0])
+    
+    return [(nx, ny) for (degree, nx, ny) in moves_with_degree]
+
+def solve_knights_tour(x, y, move_count, board):
+    """Rekurzív megoldó algoritmus backtracking-el"""
+    # Alapeset: ha minden mezőt bejártunk
+    if move_count == 64:
+        return True
+    
+    # Warnsdorff szerint rendezett lépések
+    next_moves = warnsdorff_order(x, y, board)
+    
+    for nx, ny in next_moves:
+        # Megjelöljük az aktuális lépést
+        board[nx][ny] = move_count + 1
+        
+        # Rekurzív hívás a következő lépéshez
+        if solve_knights_tour(nx, ny, move_count + 1, board):
+            return True
+        
+        # Backtracking: visszalépés ha nem sikerült
+        board[nx][ny] = 0
+    
+    return False
+
+def print_board(board):
+    """Kiírja a sakktáblát a kívánt formátumban"""
+    for i in range(1, 9):
+        for j in range(1, 9):
+            print(board[i][j], end=" ")
+        print()
+
+def main():
+    """Főprogram"""
+    try:
+        # Bemenet beolvasása
+        input_str = input().strip()
+        if not input_str:
+            return
+        
+        x, y = map(int, input_str.split())
+        
+        # Sakktábla inicializálása (9×9, de csak 1-8-ig használjuk)
+        board = [[0 for _ in range(9)] for _ in range(9)]
+        
+        # Kezdőpozíció beállítása
+        board[y][x] = 1
+        
+        # Megoldás keresése
+        if solve_knights_tour(y, x, 1, board):
+            print_board(board)
+        else:
+            print("Nem található megoldás")
+            
+    except Exception as e:
+        print(f"Hiba: {e}")
+
+if __name__ == "__main__":
+    main()`;
+
+            const blob = new Blob([pythonCode], { type: 'text/x-python' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'knight_tour.py';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Syntax highlighting helper
+        document.addEventListener('DOMContentLoaded', function() {
+            const codeElement = document.querySelector('.code-container pre');
+            if (codeElement) {
+                const code = codeElement.innerHTML;
+                
+                // Python kulcsszavak
+                const pythonKeywords = [
+                    'def', 'return', 'if', 'else', 'for', 'in', 'while',
+                    'import', 'from', 'as', 'try', 'except', 'True', 'False',
+                    'None', 'and', 'or', 'not', 'is', 'lambda', 'class'
+                ];
+                
+                // JavaScript kulcsszavak (a HTML-ben lévő kódhoz)
+                const jsKeywords = [
+                    'function', 'var', 'let', 'const', 'if', 'else',
+                    'for', 'while', 'return', 'import', 'export',
+                    'class', 'extends', 'new', 'this', 'async', 'await',
+                    'try', 'catch', 'finally', 'throw'
+                ];
+                
+                let highlightedCode = code;
+                
+                // Python kulcsszavak kiemelése
+                pythonKeywords.forEach(keyword => {
+                    const regex = new RegExp(`\\b${keyword}\\b`, 'g');
+                    highlightedCode = highlightedCode.replace(
+                        regex, 
+                        `<span class="keyword">${keyword}</span>`
+                    );
+                });
+                
+                // Függvénynevek kiemelése
+                const functionRegex = /def\s+(\w+)/g;
+                highlightedCode = highlightedCode.replace(
+                    functionRegex,
+                    'def <span class="function">$1</span>'
+                );
+                
+                // Stringek kiemelése
+                const stringRegex = /(["'][^"']*["'])/g;
+                highlightedCode = highlightedCode.replace(
+                    stringRegex,
+                    '<span class="string">$1</span>'
+                );
+                
+                // Kommentek kiemelése
+                const commentRegex = /(#.*$)/gm;
+                highlightedCode = highlightedCode.replace(
+                    commentRegex,
+                    '<span class="comment">$1</span>'
+                );
+                
+                // Számok kiemelése
+                const numberRegex = /\b(\d+)\b/g;
+                highlightedCode = highlightedCode.replace(
+                    numberRegex,
+                    '<span class="number">$1</span>'
+                );
+                
+                codeElement.innerHTML = highlightedCode;
+            }
+        });
+    </script>
+</body>
+</html>
