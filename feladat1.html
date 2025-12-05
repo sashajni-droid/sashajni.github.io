@@ -526,61 +526,61 @@ G H I</pre>
         }
 
         // Kód letöltése .java fájlként
-        function downloadCode() {
-            const cleanCode = `import java.io.*;
+       import java.io.*;
 import java.util.*;
-
+ 
 public class Main {
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int n = Integer.parseInt(br.readLine().trim());
-        
         char[][] grid = new char[n][n];
         for (int i = 0; i < n; i++) {
             String line = br.readLine();
             while (line == null || line.length() < n) {
+                // Ha valami miatt sorok törnek (ritka), olvassunk tovább
                 String extra = br.readLine();
                 if (extra == null) break;
                 line = (line == null ? "" : line) + extra;
             }
             grid[i] = line.trim().toCharArray();
         }
-        
+ 
         StringBuilder sb = new StringBuilder();
         sb.append(grid[0][0]);
-        
+ 
+        // current: lista azon sorindexeknek, amelyek az aktuális diagonálon elérhetők
         ArrayList<Integer> current = new ArrayList<>();
-        current.add(0);
-        
+        current.add(0); // (0,0) row index 0, mert i+j = 0
+ 
+        // seen token trükk a duplikátumok elkerülésére (nem törlünk tömböt minden iterációban)
         int[] seen = new int[n];
         int seenToken = 1;
-        
+ 
+        // végső string hossza 2*n - 1; már van 1 karakterünk --> kell még 2*n-2 karakter
         for (int d = 0; d < 2 * n - 2; d++) {
+            // keresd meg a következő (d+1)-edik diagonálra vezető legkisebb betűt
             char minChar = Character.MAX_VALUE;
             for (int idx = 0; idx < current.size(); idx++) {
                 int i = current.get(idx);
-                int j = d - i;
-                
+                int j = d - i; // jelenlegi diagonálon j = d - i
                 if (i + 1 < n) {
                     char c = grid[i + 1][j];
                     if (c < minChar) minChar = c;
                 }
-                
                 if (j + 1 < n) {
                     char c = grid[i][j + 1];
                     if (c < minChar) minChar = c;
                 }
             }
-            
+ 
             sb.append(minChar);
-            
+ 
+            // építsük a következő diagonál current listáját (sorindexek)
             ArrayList<Integer> next = new ArrayList<>();
             seenToken++;
-            
             for (int idx = 0; idx < current.size(); idx++) {
                 int i = current.get(idx);
                 int j = d - i;
-                
                 if (i + 1 < n && grid[i + 1][j] == minChar) {
                     int row = i + 1;
                     if (seen[row] != seenToken) {
@@ -588,35 +588,21 @@ public class Main {
                         next.add(row);
                     }
                 }
-                
                 if (j + 1 < n && grid[i][j + 1] == minChar) {
-                    int row = i;
+                    int row = i; // (i, j+1) sorindexe i
                     if (seen[row] != seenToken) {
                         seen[row] = seenToken;
                         next.add(row);
                     }
                 }
             }
-            
+ 
             current = next;
         }
-        
+ 
         System.out.println(sb.toString());
     }
-}`;
-
-            const blob = new Blob([cleanCode], { type: 'text/x-java-source' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'Main.java';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            showMessage('✅ Java fájl letöltése elkezdődött!', '#1a2980');
-        }
+}
 
         // Üzenet megjelenítése
         function showMessage(text, color) {
